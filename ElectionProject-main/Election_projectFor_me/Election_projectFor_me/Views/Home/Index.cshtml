@@ -1,0 +1,1851 @@
+﻿@model IEnumerable<Election_projectFor_me.Models.Ad>
+
+
+@{
+    ViewBag.Title = "Home Page";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    //var endElection = Session["endElection"] as DateTime?;
+    @*var formattedDate = endElection.HasValue
+        ? endElection.Value.ToString("yyyy-MM-ddTHH:mm:ss")
+        : DateTime.Now.AddMinutes(1).ToString("yyyy-MM-ddTHH:mm:ss");
+}*@
+}
+
+
+<head>
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="~/assets/map.css" rel="stylesheet" />
+    
+    <style>
+
+        .province:hover .mark {
+            display: inline;
+        }
+
+        .mark {
+            display: none;
+            color: red;
+            transition: color 0.3s ease;
+        }
+
+        .province .name {
+            display: none;
+        }
+
+        .province.active .name {
+            display: inline;
+        }
+
+        .province:hover .mark {
+            display: inline;
+        }
+
+        .popup {
+            display: none;
+            position: absolute;
+            background: white;
+            border: 1px solid #ccc;
+            padding: 15px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+        }
+
+            .popup.show {
+                display: block;
+                position: absolute !important;
+                top: 370rem !important;
+            }
+
+
+        .card {
+            border: none;
+            border-radius: 10px;
+            background-color: #ffffff;
+            overflow: hidden;
+            padding: 15px;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-body {
+            padding: 15px;
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .ad-content img, .ad-content video, .ad-content iframe {
+            max-width: 100%;
+            height: 400PX;
+        }
+
+        .card-img, .card-img-top {
+            height: 400px;
+            border-top-left-radius: var(--bs-card-inner-border-radius);
+            border-top-right-radius: var(--bs-card-inner-border-radius);
+        }
+
+        .mx-auto {
+            margin-right: auto !important;
+            margin-left: auto !important;
+            height: 600px;
+        }
+
+        .container h2 {
+            margin-bottom: 30px;
+        }
+
+        .carousel-item {
+            transition: transform 0.2s;
+        }
+
+        .carousel-control-prev-icon, .carousel-control-next-icon {
+            color: black;
+            background-color: #a1a1a1;
+        }
+
+        .card-text {
+            direction: rtl;
+            text-align: center;
+        }
+
+        #adCarousel {
+            padding-bottom: 2.5%;
+        }
+
+        .custom-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .custom-card {
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            background-color: #fff;
+            margin-top: 2rem;
+        }
+
+        .custom-card-header {
+            background: linear-gradient(to right, #007bff, #0056b3);
+            color: #fff;
+            text-align: center;
+            padding: 1rem;
+            font-size: 1.5rem;
+        }
+
+        .custom-card-title {
+            margin: 0;
+            font-weight: bold;
+        }
+
+        .custom-card-body {
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .flip-counter {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .flip-card {
+            width: 60px;
+            height: 90px;
+            background: #fff;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2rem;
+            color: #333;
+            position: relative;
+            overflow: hidden;
+        }
+
+            .flip-card .flip-card-inner {
+                perspective: 1000px;
+                position: relative;
+                width: 100%;
+                height: 100%;
+            }
+
+            .flip-card .flip-card-front,
+            .flip-card .flip-card-back {
+                width: 100%;
+                height: 100%;
+                background: #fff;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                position: absolute;
+                backface-visibility: hidden;
+                transition: transform 0.6s;
+            }
+
+            .flip-card .flip-card-back {
+                transform: rotateX(180deg);
+            }
+
+            .flip-card.flip .flip-card-front {
+                transform: rotateX(180deg);
+            }
+
+            .flip-card.flip .flip-card-back {
+                transform: rotateX(0deg);
+            }
+
+        .flip-card-wrapper {
+            position: relative;
+            height: 90px;
+        }
+
+        .custom-alert {
+            background-color: #ffc107;
+            color: #212529;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            font-size: 1.125rem;
+            display: inline-block;
+            margin-top: 1rem;
+        }
+        .marquee-container {
+   width: 100%;
+   background-color: #f8f9fa;
+   padding: 15px 0;
+ }
+
+ .marquee-content {
+   display: flex;
+   animation: marquee 20s linear infinite;
+ }
+
+ .marquee-item {
+   flex: 0 0 auto;
+   padding: 0 20px;
+   font-size: 1.2rem;
+   color: white;
+ }
+
+ @@keyframes marquee {
+   0% {
+     transform: translateX(100%);
+   }
+
+   100% {
+     transform: translateX(-100%);
+   }
+ }
+
+ /* Optional: Pause animation on hover */
+ .marquee-container:hover .marquee-content {
+   animation-play-state: paused;
+ }
+ .province:hover .mark {
+    display: inline;
+}
+
+.mark {
+    display: none;
+    color: red;
+    background-color: inherit;
+    transition: color 0.3s ease;
+    background-color: none;
+}
+
+.province.active .name {
+    display: none;
+}
+
+.province:hover .mark {
+    display: inline;
+}
+
+.popup {
+    display: none;
+    position: absolute;
+    background: white;
+    border: 1px solid #ccc;
+    padding: 15px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    border-radius: 10%;
+    color: #190e4e;
+}
+
+.popup.show {
+    display: block;
+}
+
+.province .name {
+    display: none;
+}
+
+.popup button {
+    margin-top: 10px;
+    border-radius: 20%;
+    background-color: white;
+    color: #190e4e;
+    border-color: #190e4e;
+}
+    </style>
+
+
+    
+
+</head>
+
+<body>
+    <div class="page landing-page">
+
+
+        <!--Header Section ======================-->
+        <!--Header Section ======================-->
+        <!--Hero Section ======================-->
+        <section class="section-hero hero-3 text-bg-dark" data-bs-theme="dark">
+            <div class="hero-wrapper parallax position-relative">
+                <div class="max-width">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-8 col-lg-7 col-xxl-8">
+                                <div class="hero-inner-text d-flex flex-column gap-3 gap-xxl-4 position-relative">
+                                    <span class="subtitle fw-bold fs-4 font-family-style-1 mb-0 wow fadeInLeftBig" data-wow-delay=".1s">شارك بصوتك</span>
+                                    <h1 class="mb-2 mb-lg-20 hero-heading wow fadeInLeftBig" data-wow-delay=".4s"><span style="color: #177105">نمو</span> الإنتخابات الأردنية النيابية تبدأ من <span class="text-primary position-relative">إنتخب </span></h1>
+                                    <p class="mb-20 mb-xxl-40 fs-5 hero-text wow fadeInLeftBig" data-wow-delay=".8s" data-wow-duration="1.6s">
+                                        هدفنا تحسين الأردن عبر انتخابات نزيهة وآمنة لمستقبل مشرق وشامل للجميع
+                                    </p>
+
+                                    <div class="hero-buttons d-flex flex-column flex-lg-row gap-4 gap-lg-30 align-items-lg-center wow fadeInLeftBig" data-wow-delay="1s" data-wow-duration="1.6s">
+                                        @Html.ActionLink("أكتشف المزيد ", "ActionName", "ControllerName", null, new { @class = "btn btn-primary btn-lg", @href = "#events" })
+                                        @Html.ActionLink("تواصل معنا", "Contact", "Home", null, new { @class = "btn btn-outline-secondary btn-lg" })
+                                    </div>
+                                </div>
+                                <!-- hero-inner-text -->
+                            </div>
+                            <!-- col-6 -->
+                        </div>
+                        <!-- row -->
+                    </div>
+                    <!-- container -->
+                    <div class="hero-image-3 wow slideInRight" data-wow-duration="2.5s">
+                        <img src="~/assets/images/Abdallah/1.png" class="img-fluid" alt="hero-image-3">
+                    </div>
+                </div>
+
+            </div>
+            <!-- hero-wrapper -->
+            <div class="marquee-container overflow-hidden bg-light shadow-sm">
+                <div class="marquee-content d-flex align-items-center">
+                    <div class="marquee-item px-4 py-2 bg-dark text-danger rounded-pill mx-2">تبدأ الانتخابات الأردنية النيابية يوم الخميس الموافق 22-8-2024</div>
+                    <div class="marquee-item px-4 py-2 bg-dark text-danger rounded-pill mx-2">  اسرة انتخب  تبارك لولي العهد الامير الحسين بن عبد الله الثاني والاميره رجوه  بمناسبة قدوم ابنته ايمان بنت الحسين</div>
+                    <div class="marquee-item px-4 py-2 bg-dark text-danger rounded-pill mx-2">انتخابات نيابيه اردنيه </div>
+                    <div class="marquee-item px-4 py-2 bg-dark text-danger rounded-pill mx-2">طقس حار نسبيا  يوم الخميس في عموم مناطق المملكه</div>
+                    <div class="marquee-item px-4 py-2 bg-dark text-danger rounded-pill mx-2">ارتفاع حصية عدوان الاحتلال  الى 40.319 شهيد</div>
+                </div>
+            </div>
+        </section>
+        <!--Hero Section ======================-->
+        <!--About Section ======================-->
+        <section class="section-about about-1 py-60 py-lg-100 py-xxl-120">
+            <div class="container">
+
+                <div class="d-flex flex-column gap-60 gap-lg-100 gap-xxl-120">
+
+                    <!--Donate Section ======================-->
+                    <div id="donate" class="section-donate donate-1" data-bs-theme="dark">
+                        <div class="donate-wrapper p-40 p-lg-70">
+                            <div class="row align-items-center gy-40">
+
+                                <div class="col-lg-5">
+                                    <div class="d-flex flex-column gap-4">
+                                        <h2 class="mb-0 donate-heading">
+                                            تذبذب نسبة المشاركة في الانتخابات النيابية الأردنية
+                                        </h2>
+                                        <p class="mb-0">نسبة أعداد المصوتين في الانتخابات النيابية الأردنية شهدت تذبذباً ملحوظاً على مر السنوات. على سبيل المثال، بلغت نسبة المشاركة في انتخابات عام 2020 حوالي 29.9%، بينما كانت نسبة المشاركة في انتخابات عام 2013 نحو 56%، مما يعكس تغيرات في الوعي السياسي والمشاركة الشعبية</p>
+                                    </div>
+                                </div>
+                                <!-- col-4 -->
+
+                                <div class="col-lg-7">
+                                    <div class="donate-inner d-flex flex-column gap-30 ms-auto">
+                                        <ul class="donate-lists list-unstyled d-flex flex-wrap justify-content-between gap-3 mb-0 me-auto">
+                                            <li class="fs-5">الدورة الثانية والعشرون  ٪٣٦</li>
+                                            <li class="fs-5">الدورة الثالثة والعشرون  ٪٢٩.٩</li>
+                                            <li class="fs-5">الدورة العشرون  ٪٥٤</li>
+                                            <li class="fs-5">الدورة الحادي والعشرون  ٪٥٦</li>
+                                            <li class="fs-5">الدورة الثامنة عشر ٪٥٠</li>
+                                            <li class="fs-5">الدورة التاسعة عشر ٪٥٣</li>
+                                            <li class="fs-5">الدورة السادسة عشر ٪٤٣</li>
+                                            <li class="fs-5">الدورة الخامسة عشر  ٪٣٦</li>
+                                        </ul>
+                                        <div>
+                                            <button type="button" class="btn btn-primary w-100" onclick="window.location.href='@Url.Action("About", "Home")'">أكتشف المزيد</button>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <!-- col-7 -->
+                            </div>
+                            <!-- row -->
+                        </div>
+                        <!-- bg-secondary -->
+                    </div>
+                    <!--Donate Section ======================-->
+
+                    <div class="row align-items-center g-60 gy-lg-0">
+
+                        <div class="col-lg-6 wow slideInLeft">
+                            <div class="about-image">
+                                <img src="~/assets/images/Jordan/BG5.jpg" style="width:438px; height:458px" class="img-fluid" alt="about-image-3">
+                            </div>
+                        </div>
+                        <!-- col-6 -->
+                        <div class="col-lg-6">
+                            <h6 class="subtitle lead text-primary mb-10 wow fadeInRight" data-wow-duration="1.3s">إنتخب</h6>
+                            <div class="d-flex flex-column gap-20 mb-30">
+                                <h2 class="mb-0 wow fadeInRight" data-wow-delay=".2s" data-wow-duration="1.3s"> ما هو إنتخب </h2>
+                                <p class="mb-0 fs-5 fw-semibold wow fadeInRight" data-wow-delay=".3s" data-wow-duration="1.3s"> تعمل منصة إنتخب على زيادة نسبة المشاركة في الانتخابات من خلال تبسيط عملية الاقتراع، مما يجعل التصويت أكثر سهولة ويسرًا للمواطنين</p>
+                                <p class="mb-0 wow fadeInRight" data-wow-delay=".4s" data-wow-duration="1.3s">
+                                    تُعتبر الانتخابات النيابية في الأردن حدثًا مهمًا يعكس تطلعات الشعب نحو المشاركة السياسية. شهدت نسبة المشاركة تذبذبًا ملحوظًا، حيث بلغت حوالي 29.9% في انتخابات 2020، بينما وصلت إلى 56% في عام 2013. تُجرى الانتخابات وفق نظام القائمة النسبية المفتوحة، مما يتيح للناخبين اختيار مرشحين من قوائم متعددة. على الرغم من الجهود لتعزيز مشاركة المرأة، إلا أن عدد النساء المنتخبات يبقى محدودًا. تأتي هذه الانتخابات في ظل تحديات اقتصادية واجتماعية تؤثر على الحياة السياسية في البلاد.
+                                </p>
+                            </div>
+                            <!-- author-info -->
+                        </div>
+                        <!-- col-6 -->
+
+                    </div>
+                    <!-- row -->
+                </div>
+                <!-- d-flex -->
+            </div>
+            <!-- container -->
+            <!-- map start-->
+            @*<div class="map" id="mapContainer"></div>
+                <div id="popup" class="popup"></div>*@
+            <!-- map end -->
+
+        </section>
+        <!--About Section ======================-->
+        <!--Vison Section ======================-->
+        <section class="section-vison vison-1 bg-custom-light py-60 py-lg-100 py-xxl-120">
+            <div class="container">
+
+                <div class="d-flex flex-column gap-40">
+                    <div class="row">
+                        <div class="col-lg-9 offset-lg-2 text-lg-center">
+                            <div class="contents-width">
+                                <div class="d-flex flex-column gap-3 wow slideInUp">
+                                    <h6 class="subtitle lead text-primary mb-0">هذه هي فرصتنا لتحقيق</h6>
+                                    <h2 class="mb-0">رؤيتنا ورسالتنا</h2>
+                                    <p class="mb-0">من خلال الالتزام بهذه الرؤية والرسالة، نحن ملتزمون بإحداث تأثير إيجابي في حياة الأشخاص الذين نخدمهم وبناء مستقبل أكثر إشراقًا لمجتمعنا</p>
+                                </div>
+                            </div>
+                            <!-- contents-width -->
+                        </div>
+                        <!-- col-8 -->
+                    </div>
+                    <!-- row -->
+
+                    <div class="row g-30">
+                        <div class="col-lg-4">
+                            <div class="card card-style-2 wow fadeInUp" data-wow-delay=".2s" data-wow-duration="1.2s">
+                                <div class="card-image-wrapper" style="height:292px">
+                                    <img src="~/assets/images/Jordan/78o8.jpg" class="card-img-top" alt="event-3">
+                                </div>
+                                <!-- card-image-wrapper -->
+                                <div class="card-body position-relative">
+                                    <span class="card-icon-wrapper">
+                                        <svg width="46" height="40"><use xlink:href="#human-rights-icon"></use></svg>
+                                    </span>
+                                    <div class="d-flex flex-column gap-10">
+                                        <h5 class="card-title fw-semibold"><a href="#" class="text-decoration-none stretched-link link-hover-animation-1">تعزيز المشاركة الديمقراطية</a></h5>
+                                        <p class="card-text"> يهدف موقع "إنتخب" إلى زيادة نسبة المشاركة في الانتخابات من خلال توفير منصة سهلة وآمنة للتصويت عبر الإنترنت، مما يسهل على المواطنين الإدلاء بأصواتهم وممارسة حقوقهم الديمقراطية</p>
+                                    </div>
+                                </div>
+                                <!-- card-body -->
+                            </div>
+                            <!-- card -->
+                        </div>
+                        <!-- col-4 -->
+
+                        <div class="col-lg-4">
+                            <div class="card card-style-2 wow fadeInUp" data-wow-delay=".4s" data-wow-duration="1.2s">
+                                <div class="card-image-wrapper" style="height:292px">
+                                    <img src="~/assets/images/Jordan/poster2.jpg" class="card-img-top" alt="campaign-1">
+                                </div>
+                                <!-- card-image-wrapper -->
+                                <div class="card-body position-relative">
+                                    <span class="card-icon-wrapper">
+                                        <svg width="40" height="40"><use xlink:href="#migration-icon"></use></svg>
+                                    </span>
+                                    <div class="d-flex flex-column gap-10">
+                                        <h5 class="card-title fw-semibold"><a href="#" class="text-decoration-none stretched-link link-hover-animation-1">توفير مناظرات شفافة</a></h5>
+                                        <p class="card-text">يسعى الموقع إلى تنظيم مناظرات انتخابية تفاعلية بين المرشحين، مما يتيح للناخبين فرصة التعرف على سياساتهم وآرائهم بشكل مباشر، وبالتالي تعزيز الوعي السياسي لدى المواطنين</p>
+                                    </div>
+                                </div>
+                                <!-- card-body -->
+                            </div>
+                            <!-- card -->
+                        </div>
+                        <!-- col-4 -->
+
+                        <div class="col-lg-4">
+                            <div class="card card-style-2 wow fadeInUp" data-wow-delay=".6s" data-wow-duration="1.2s">
+                                <div class="card-image-wrapper" style="height:292px">
+                                    <img src="~/assets/images/Jordan/tamken.jpg" class="card-img-top" alt="campaign-6">
+                                </div>
+                                <!-- card-image-wrapper -->
+                                <div class="card-body position-relative">
+                                    <span class="card-icon-wrapper">
+                                        <svg width="40" height="40"><use xlink:href="#election-icon"></use></svg>
+                                    </span>
+                                    <div class="d-flex flex-column gap-10">
+                                        <h5 class="card-title fw-semibold"><a href="#" class="text-decoration-none stretched-link link-hover-animation-1">تمكين الشباب والنساء </a></h5>
+                                        <p class="card-text">يركز "إنتخب" على تشجيع فئات المجتمع المهمشة، مثل الشباب والنساء، على المشاركة الفعالة في العملية الانتخابية، من خلال حملات توعية وموارد تعليمية تعزز من فهمهم لدورهم في الحياة السياسية</p>
+                                    </div>
+                                </div>
+                                <!-- card-body -->
+                            </div>
+                            <!-- card -->
+                        </div>
+                        <!-- col-4 -->
+
+                    </div>
+                    <!-- row -->
+                </div>
+                <!-- d-flex -->
+
+            </div>
+            <!-- container -->
+        </section>
+
+
+
+        <section>
+            <div class="row gy-30 mb-40" style="display: flex; justify-content: center; align-items: center;">
+                <div class="col-lg-7" style="text-align: center;">
+                    <div class="contents-width d-flex flex-column gap-10">
+                        <div class="d-flex flex-column gap-3">
+                            <h2 class="mb-0">الاعلانات</h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="adCarousel" class="carousel slide container mt-5" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                    @foreach (var chunk in Model.Select((value, index) => new { value, index }).GroupBy(x => x.index / 3))
+                    {
+                        <div class="carousel-item @(chunk.Key == 0 ? "active" : "")">
+                            <div class="row">
+                                @foreach (var ad in chunk)
+                                {
+                                    <div class="col-md-4">
+                                        <div class="card mx-auto" style="width: 25rem;">
+                                            @{
+                                                var url = ad.value.URLPath?.ToLower();
+                                                if (url != null)
+                                                {
+                                                    if (url.Contains("youtube.com") || url.Contains("youtu.be"))
+                                                    {
+                                                        string embedUrl = "";
+                                                        if (url.Contains("youtube.com"))
+                                                        {
+                                                            var videoId = System.Text.RegularExpressions.Regex.Match(url, @"(?:youtube\.com/(?:[^/]+/.+/|(?:v|e(?:mbed)?)|.*[?&]v=)|youtu\.be/)([^""&?/ ]{11})").Groups[1].Value;
+                                                            embedUrl = $"https://www.youtube.com/embed/{videoId}";
+                                                        }
+                                                        else if (url.Contains("youtu.be"))
+                                                        {
+                                                            var videoId = url.Split('/').Last();
+                                                            embedUrl = $"https://www.youtube.com/embed/{videoId}";
+                                                        }
+                                                        <iframe width="100%" height="400" src="@embedUrl" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                                                    }
+                                                    else if (url.Contains("vimeo.com"))
+                                                    {
+                                                        var videoId = url.Split('/').Last();
+                                                        var embedUrl = $"https://player.vimeo.com/video/{videoId}";
+                                                        <iframe width="100%" height="400" src="@embedUrl" title="Vimeo video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                                                    }
+                                                    else if (url.Contains(".mp4") || url.Contains(".webm") || url.Contains(".ogg"))
+                                                    {
+                                                        <video controls class="img-fluid">
+                                                            <source src="@ad.value.URLPath" type="video/mp4">
+                                                            Your browser does not support the video tag.
+                                                        </video>
+                                                    }
+                                                    else if (url.EndsWith(".jpg") || url.EndsWith(".jpeg") || url.EndsWith(".png") || url.EndsWith(".gif"))
+                                                    {
+                                                        <img src="@ad.value.URLPath" class="card-img-top" alt="advertisement image">
+                                                    }
+                                                    else
+                                                    {
+                                                        <img src="@ad.value.URLPath" class="card-img-top" alt="advertisement image">
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    <p>No URL provided.</p>
+                                                }
+                                            }
+
+                                            <div class="card-body">
+                                                <p class="card-text"> <b> اسم المرشح :@ad.value.CandidateName </b></p>
+                                                <p class="card-text"> اسم القائمة : @ad.value.ListName </p>
+                                                <p class="card-text">@ad.value.Content</p>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    }
+                    <button class="carousel-control-prev" type="button" data-bs-target="#adCarousel" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#adCarousel" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                </div>
+
+
+        </section>
+        <section id="events" class="section-event event-1 bg-custom-light py-60 py-lg-100 py-xxl-120">
+            <div class="container">
+                <div class="row gy-30 justify-content-between align-items-lg-end">
+
+                    <div class="col-lg-7 col-xxl-6 wow fadeInLeft">
+                        <div class="row gy-30 justify-content-between align-items-end mb-40">
+                            <div class="col-8 col-md-9">
+                                <div class="contents-width d-flex flex-column gap-10">
+                                    <h6 class="subtitle lead text-primary mb-0">الأنشطة</h6>
+                                    <h2 class="mb-0"> مواعيد المناظرات في إنتخب</h2>
+                                </div>
+                                <!-- contents-width -->
+                            </div>
+                            <!-- col-9 -->
+                            <div class="col-4 col-md-2">
+                                <div class="eventSwiper-buttons d-flex gap-10 justify-content-end">
+                                    <div class="politixySwiper-button-prev">
+                                        <span class="arrow-icon arrow-reverse">
+                                            <svg width="16" height="16"><use xlink:href="#arrow-icon"></use></svg>
+                                        </span>
+                                    </div>
+                                    <div class="politixySwiper-button-next">
+                                        <span class="arrow-icon">
+                                            <svg width="16" height="16"><use xlink:href="#arrow-icon"></use></svg>
+                                        </span>
+                                    </div>
+                                </div>
+                                <!-- eventSwiper-buttons -->
+                            </div>
+                            <!-- col-2 -->
+                        </div>
+                        <!-- row -->
+
+                        <div class="event-swiper-wrapper">
+                            <div class="swiper eventSwiper p-1 p-md-10">
+                                <div class="swiper-wrapper">
+
+                                    <div class="swiper-slide countdown">
+                                        <div class="card card-style-1 card-shadow-style-1">
+                                            <div class="card-image-wrapper card-image-overlay">
+                                                <img src="~/assets/images/Jordan/img1.png" class="img-fluid card-img-top" alt="event-2">
+                                                <a href="https://www.youtube.com/watch?v=zmuG1abJrz4" class="video-popup video-popup-style-4">
+                                                    <span class="video-icon">
+                                                        <svg width="17" height="21"><use xlink:href="#video-icon"></use></svg>
+                                                    </span>
+                                                </a>
+                                            </div>
+                                            <!-- card-image-wrapper -->
+                                            <div class="card-body">
+                                                <div class="d-flex flex-column gap-20">
+                                                    <div>
+                                                        <ul class="list-unstyled mb-10 mb-md-0 d-flex flex-column flex-md-row gap-0 gap-md-10">
+                                                            <li class="body-color-style-1">
+                                                                <span class="extra-small">٢٢ أغسطس ٢٠٢٤ | ١٠:٠٠ ص إلى ٠٦:٠٠ م</span>
+                                                            </li>
+                                                            <li class=" body-color-style-1">
+                                                                <span class="location-icon-sm text-primary">
+                                                                    <svg width="11" height="14"><use xlink:href="#location-icon-sm"></use></svg>
+                                                                </span>
+                                                                <span class="extra-small">المملكة الأردنية الهاشمية</span>
+                                                            </li>
+                                                        </ul>
+                                                        <h3 class="card-title mb-0">
+                                                            <a href="@Url.Action("YourActionName", "YourControllerName")" class="text-decoration-none stretched-link link-hover-animation-1">تبقى على موعد إنتهاء الإنتخابات الأردنية النيابية</a>
+                                                        </h3>
+                                                    </div>
+
+                                                    <div class="">
+                                                        <ul class="count-down-item-lists list-unstyled mb-0">
+                                                            <li class="countdown-item d-flex flex-column align-items-center justify-content-center bg-custom-light">
+                                                                <h3 class="mb-0 countdown-number fw-bold"><span class="days">00</span></h3>
+                                                                <span class="countdown-label text-opacity">أيام</span>
+                                                            </li>
+
+
+                                                            <li class="countdown-item d-flex flex-column align-items-center justify-content-center bg-custom-light">
+                                                                <h3 class="mb-0 countdown-number fw-bold"><span class="hours">00</span></h3>
+                                                                <span class="countdown-label text-opacity">ساعات</span>
+                                                            </li>
+
+
+                                                            <li class="countdown-item d-flex flex-column align-items-center justify-content-center bg-custom-light">
+                                                                <h3 class="mb-0 countdown-number fw-bold"><span class="minutes">00</span></h3>
+                                                                <span class="countdown-label text-opacity">دقيقة</span>
+                                                            </li>
+
+
+                                                            <li class="countdown-item d-flex flex-column align-items-center justify-content-center bg-custom-light">
+                                                                <h3 class="mb-0 countdown-number fw-bold"><span class="seconds">00</span></h3>
+                                                                <span class="countdown-label text-opacity">ثانية</span>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                    <!-- countdown -->
+
+                                                </div>
+                                            </div>
+                                            <!-- card-body -->
+                                        </div>
+                                        <!-- card -->
+                                    </div>
+                                    <!-- swiper-slide -->
+
+                                    <div class="swiper-slide countdown">
+                                        <div class="card card-style-1 card-shadow-style-1">
+                                            <div class="card-image-wrapper card-image-overlay">
+                                                <img src="~/assets/images/Jordan/img2.jpg" class="img-fluid card-img-top" alt="campaign-4">
+                                                <a href="https://www.youtube.com/watch?v=SFzlLy5Flao" class="video-popup video-popup-style-4">
+                                                    <span class="video-icon">
+                                                        <svg width="17" height="21"><use xlink:href="#video-icon"></use></svg>
+                                                    </span>
+                                                </a>
+                                            </div>
+                                            <!-- card-image-wrapper -->
+                                            <div class="card-body">
+                                                <div class="d-flex flex-column gap-20">
+                                                    <div>
+                                                        <ul class="list-unstyled mb-10 mb-md-0 d-flex flex-column flex-md-row gap-0 gap-md-10">
+                                                            <li class="body-color-style-1">
+                                                                <span class="extra-small">٢٢ أغسطس ٢٠٢٤ | ١٠:٠٠ ص إلى ٠٦:٠٠ م</span>
+                                                            </li>
+                                                            <li class=" body-color-style-1">
+                                                                <span class="location-icon-sm text-primary">
+                                                                    <svg width="11" height="14"><use xlink:href="#location-icon-sm"></use></svg>
+                                                                </span>
+                                                                <span class="extra-small">المملكة الأردنية الهاشمية</span>
+                                                            </li>
+                                                        </ul>
+                                                        <h3 class="card-title mb-0"><a href="news-single.html" class="text-decoration-none stretched-link link-hover-animation-1">تبقى على موعد بدء المناظرة الأولى بين المرشحين</a></h3>
+                                                    </div>
+
+                                                    <div class="">
+                                                        <ul class="count-down-item-lists list-unstyled mb-0">
+                                                            <li class="countdown-item d-flex flex-column align-items-center justify-content-center bg-custom-light">
+                                                                <h3 class="mb-0 countdown-number fw-bold"><span class="days">00</span></h3>
+                                                                <span class="countdown-label text-opacity">أيام</span>
+                                                            </li>
+
+
+                                                            <li class="countdown-item d-flex flex-column align-items-center justify-content-center bg-custom-light">
+                                                                <h3 class="mb-0 countdown-number fw-bold"><span class="hours">00</span></h3>
+                                                                <span class="countdown-label text-opacity">ساعات</span>
+                                                            </li>
+
+
+                                                            <li class="countdown-item d-flex flex-column align-items-center justify-content-center bg-custom-light">
+                                                                <h3 class="mb-0 countdown-number fw-bold"><span class="minutes">00</span></h3>
+                                                                <span class="countdown-label text-opacity">دقيقة</span>
+                                                            </li>
+
+
+                                                            <li class="countdown-item d-flex flex-column align-items-center justify-content-center bg-custom-light">
+                                                                <h3 class="mb-0 countdown-number fw-bold"><span class="seconds">00</span></h3>
+                                                                <span class="countdown-label text-opacity">ثانية</span>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                    <!-- countdown -->
+
+                                                </div>
+                                            </div>
+                                            <!-- card-body -->
+                                        </div>
+                                        <!-- card -->
+                                    </div>
+                                    <!-- swiper-slide -->
+
+                                    <div class="swiper-slide countdown">
+                                        <div class="card card-style-1 card-shadow-style-1">
+                                            <div class="card-image-wrapper card-image-overlay">
+                                                <img src="~/assets/images/Jordan/img3.jpg" class="img-fluid card-img-top" alt="event-3">
+                                                <a href="https://www.youtube.com/watch?v=e9YKfDU1o7I" class="video-popup video-popup-style-4">
+                                                    <span class="video-icon">
+                                                        <svg width="17" height="21"><use xlink:href="#video-icon"></use></svg>
+                                                    </span>
+                                                </a>
+                                            </div>
+                                            <!-- card-image-wrapper -->
+                                            <div class="card-body">
+                                                <div class="d-flex flex-column gap-20">
+                                                    <div>
+                                                        <ul class="list-unstyled mb-10 mb-md-0 d-flex flex-column flex-md-row gap-0 gap-md-10">
+                                                            <li class="body-color-style-1">
+                                                                <span class="extra-small">٢٢ أغسطس ٢٠٢٤ | ١٠:٠٠ ص إلى ٠٦:٠٠ م</span>
+                                                            </li>
+                                                            <li class=" body-color-style-1">
+                                                                <span class="location-icon-sm text-primary">
+                                                                    <svg width="11" height="14"><use xlink:href="#location-icon-sm"></use></svg>
+                                                                </span>
+                                                                <span class="extra-small">المملكة الأردنية الهاشمية</span>
+                                                            </li>
+                                                        </ul>
+                                                        <h3 class="card-title mb-0"><a href="news-single.html" class="text-decoration-none stretched-link link-hover-animation-1">تبقى على موعد بدء المناظرة الثانية بين المرشحين</a></h3>
+                                                    </div>
+
+                                                    <div class="">
+                                                        <ul class="count-down-item-lists list-unstyled mb-0">
+                                                            <li class="countdown-item d-flex flex-column align-items-center justify-content-center bg-custom-light">
+                                                                <h3 class="mb-0 countdown-number fw-bold"><span class="days">00</span></h3>
+                                                                <span class="countdown-label text-opacity">أيام</span>
+                                                            </li>
+
+
+                                                            <li class="countdown-item d-flex flex-column align-items-center justify-content-center bg-custom-light">
+                                                                <h3 class="mb-0 countdown-number fw-bold"><span class="hours">00</span></h3>
+                                                                <span class="countdown-label text-opacity">ساعات</span>
+                                                            </li>
+
+
+                                                            <li class="countdown-item d-flex flex-column align-items-center justify-content-center bg-custom-light">
+                                                                <h3 class="mb-0 countdown-number fw-bold"><span class="minutes">00</span></h3>
+                                                                <span class="countdown-label text-opacity">دقيقة</span>
+                                                            </li>
+
+
+                                                            <li class="countdown-item d-flex flex-column align-items-center justify-content-center bg-custom-light">
+                                                                <h3 class="mb-0 countdown-number fw-bold"><span class="seconds">00</span></h3>
+                                                                <span class="countdown-label text-opacity">ثانية</span>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                    <!-- countdown -->
+
+                                                </div>
+                                            </div>
+                                            <!-- card-body -->
+                                        </div>
+                                        <!-- card -->
+                                    </div>
+                                    <!-- swiper-slide -->
+                                    <!--<div class="swiper-slide countdown">
+                                    <div class="card card-style-1 card-shadow-style-1">
+                                        <div class="card-image-wrapper card-image-overlay">
+                                            <img src="~/assets/images/Jordan/img1.png" class="img-fluid card-img-top" alt="event-2">
+                                            <a href="https://www.youtube.com/watch?v=lfDZJqSrIuk" class="video-popup video-popup-style-4">
+                                                <span class="video-icon">
+                                                    <svg width="17" height="21"><use xlink:href="#video-icon"></use></svg>
+                                                </span>
+                                            </a>
+                                        </div>-->
+                                    <!-- card-image-wrapper -->
+                                    <!--<div class="card-body">
+                                    <div class="d-flex flex-column gap-20">
+                                        <div>
+                                            <ul class="list-unstyled mb-10 mb-md-0 d-flex flex-column flex-md-row gap-0 gap-md-10">
+                                                <li class="body-color-style-1">
+                                                    <span class="extra-small">٢٢ أغسطس ٢٠٢٤ | ١٠:٠٠ ص إلى ٠٦:٠٠ م</span>
+                                                </li>
+                                                <li class=" body-color-style-1">
+                                                    <span class="location-icon-sm text-primary">
+                                                        <svg width="11" height="14"><use xlink:href="#location-icon-sm"></use></svg>
+                                                    </span>
+                                                    <span class="extra-small">المملكة الأردنية الهاشمية</span>
+                                                </li>
+                                            </ul>
+                                            <h3 class="card-title mb-0"><a href="news-single.html" class="text-decoration-none stretched-link link-hover-animation-1">Our New Party Leadership Campaign Conference.</a></h3>
+                                        </div>
+
+                                        <div class="">
+                                            <ul class="count-down-item-lists list-unstyled mb-0">
+                                                <li class="countdown-item d-flex flex-column align-items-center justify-content-center bg-custom-light">
+                                                    <h3 class="mb-0 countdown-number fw-bold"><span class="days">00</span></h3>
+                                                    <span class="countdown-label text-opacity">أيام</span>
+                                                </li>
+
+
+                                                <li class="countdown-item d-flex flex-column align-items-center justify-content-center bg-custom-light">
+                                                    <h3 class="mb-0 countdown-number fw-bold"><span class="hours">00</span></h3>
+                                                    <span class="countdown-label text-opacity">ساعات</span>
+                                                </li>
+
+
+                                                <li class="countdown-item d-flex flex-column align-items-center justify-content-center bg-custom-light">
+                                                    <h3 class="mb-0 countdown-number fw-bold"><span class="minutes">00</span></h3>
+                                                    <span class="countdown-label text-opacity">دقيقة</span>
+                                                </li>
+
+
+                                                <li class="countdown-item d-flex flex-column align-items-center justify-content-center bg-custom-light">
+                                                    <h3 class="mb-0 countdown-number fw-bold"><span class="seconds">00</span></h3>
+                                                    <span class="countdown-label text-opacity">ثانية</span>
+                                                </li>
+                                            </ul>
+                                        </div>-->
+                                    <!-- countdown -->
+                                    <!--</div>
+                                    </div>-->
+                                    <!-- card-body -->
+                                    <!--</div>-->
+                                    <!-- card -->
+                                    <!--</div>-->
+                                    <!-- swiper-slide -->
+                                    <!--<div class="swiper-slide countdown">
+                                    <div class="card card-style-1 card-shadow-style-1">
+                                        <div class="card-image-wrapper card-image-overlay">
+                                            <img src="assets/images/placeholder.svg" data-src="assets/images/event-3.jpg" class="img-fluid card-img-top" alt="event-3">
+                                            <a href="https://www.youtube.com/watch?v=lfDZJqSrIuk" class="video-popup video-popup-style-4">
+                                                <span class="video-icon">
+                                                    <svg width="17" height="21"><use xlink:href="#video-icon"></use></svg>
+                                                </span>
+                                            </a>
+                                        </div>-->
+                                    <!-- card-image-wrapper -->
+                                    <!--<div class="card-body">
+                                    <div class="d-flex flex-column gap-20">
+                                        <div>
+                                            <ul class="list-unstyled mb-10 mb-md-0 d-flex flex-column flex-md-row gap-0 gap-md-10">
+                                                <li class="body-color-style-1">
+                                                    <span class="extra-small">12 Sep 2025 | 10:00am to 05:00pm</span>
+                                                </li>
+                                                <li class=" body-color-style-1">
+                                                    <span class="location-icon-sm text-primary">
+                                                        <svg width="11" height="14"><use xlink:href="#location-icon-sm"></use></svg>
+                                                    </span>
+                                                    <span class="extra-small">Los Angeles, Califonia</span>
+                                                </li>
+                                            </ul>
+                                            <h3 class="card-title mb-0"><a href="news-single.html" class="text-decoration-none stretched-link link-hover-animation-1">Our New Party Leadership Campaign Conference.</a></h3>
+                                        </div>
+
+                                        <div class="">
+                                            <ul class="count-down-item-lists list-unstyled mb-0">
+                                                <li class="countdown-item d-flex flex-column align-items-center justify-content-center bg-custom-light">
+                                                    <h3 class="mb-0 countdown-number fw-bold"><span class="days">00</span></h3>
+                                                    <span class="countdown-label text-opacity">أيام</span>
+                                                </li>
+
+
+                                                <li class="countdown-item d-flex flex-column align-items-center justify-content-center bg-custom-light">
+                                                    <h3 class="mb-0 countdown-number fw-bold"><span class="hours">00</span></h3>
+                                                    <span class="countdown-label text-opacity">ساعات</span>
+                                                </li>
+
+
+                                                <li class="countdown-item d-flex flex-column align-items-center justify-content-center bg-custom-light">
+                                                    <h3 class="mb-0 countdown-number fw-bold"><span class="minutes">00</span></h3>
+                                                    <span class="countdown-label text-opacity">دقيقة</span>
+                                                </li>
+
+
+                                                <li class="countdown-item d-flex flex-column align-items-center justify-content-center bg-custom-light">
+                                                    <h3 class="mb-0 countdown-number fw-bold"><span class="seconds">00</span></h3>
+                                                    <span class="countdown-label text-opacity">ثانية</span>
+                                                </li>
+                                            </ul>
+                                        </div>-->
+                                    <!-- countdown -->
+                                    <!--</div>
+                                    </div>-->
+                                    <!-- card-body -->
+                                    <!--</div>-->
+                                    <!-- card -->
+                                    <!--</div>-->
+                                    <!-- swiper-slide -->
+
+                                </div>
+                                <!-- swiper-wrapper -->
+                            </div>
+                            <!-- testimonialSwiper -->
+                        </div>
+                        <!-- event-swiper-wrapper -->
+                    </div>
+                    <!-- col-6 -->
+
+                    <div class="col-lg-5 col-xxl-6 wow fadeInRight">
+                        <div class="event-organiser border-10 pb-3">
+                            <img src="~/assets/images/Jordan/img6.jpg" class="img-fluid" alt="event-1">
+                        </div>
+                    </div>
+                    <!-- col-6 -->
+                </div>
+                <!-- row -->
+            </div>
+            <!-- container -->
+        </section>
+        <!--Event Section ======================-->
+        <!--Video Section ======================-->
+        <!--<section class="section-video video-1 pt-60 pt-lg-100 pt-xxl-120 max-width">
+
+        <div class="d-flex flex-column gap-40">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-8 offset-lg-2 text-lg-center">
+                        <div class="contents-width">
+                            <div class="d-flex flex-column gap-3 wow slideInUp">
+                                <h6 class="subtitle lead text-primary mb-0">Watch and Share</h6>
+                                <h2 class="mb-0">Our First Campaign Video</h2>
+                                <p class="mb-0">Joe and Kamala are running for re-election, and we need your help to spread the word. Share this video with your friends!</p>
+                            </div>
+                        </div>-->
+        <!-- contents-width -->
+        <!--</div>-->
+        <!-- col-8 -->
+        <!--</div>-->
+        <!-- row -->
+        <!--</div>-->
+        <!-- container -->
+        <!--<div class="bg-secondary text-bg-dark" data-bs-theme="dark">
+        <div class="row align-items-center g-0">
+            <div class="col-lg-6">
+                <div class="video-image-wrapper position-relative">
+                    <img src="assets/images/video-image.jpg" class="img-fluid" alt="video-image">
+                    <a href="https://www.youtube.com/watch?v=lfDZJqSrIuk" class="video-popup video-popup-style-3">
+                        <span class="video-icon">
+                            <svg width="40" height="50"><use xlink:href="#video-icon"></use></svg>
+                        </span>
+                    </a>
+                </div>-->
+        <!-- video-image-wrapper -->
+        <!--</div>-->
+        <!-- col-6 -->
+        <!--<div class="col-lg-6">
+        <div class="video-descriptions d-flex gap-3 gap-xxl-30">
+
+            <span class="quote-icon">
+                <svg width="78" height="60"><use xlink:href="#quote-icon"></use></svg>
+            </span>
+            <div class="video-description-inner d-flex flex-column gap-4 gap-xxl-40">
+                <p class="mb-0 video-description-text">In the journey of life, where challenges abound and uncertainties loom, essence of true empowerment lies not merely in the absence of obstacles but the strengt to overcome them. As we navigate the complexities of our individual paths, are often reminded that resilience is the heartbeat of empowerment a force tpropel us forward, transforms setbacks into opportunities, and allows us to rise from adversity with newfound strength and wisdom.</p>
+                <div class="author-info">
+                    <img class="mb-3 mb-xxl-4 img-fluid sign-light" src="assets/images/sign-light.png" alt="sign-light">
+                    <h4 class="mb-1 mb-xxl-10">David M.Smith</h4>
+                    <p class="mb-0 fs-5 body-color-style-1">Candidate</p>
+                </div>-->
+        <!-- author-info -->
+        <!--</div>
+
+        </div>-->
+        <!-- video-descriptions -->
+        <!--</div>-->
+        <!-- col-6 -->
+        <!--</div>-->
+        <!-- row -->
+        <!--</div>
+        </div>-->
+        <!-- d-flex -->
+        <!--</section>-->
+        <!--Video Section ======================-->
+        <!--Team Section ======================-->
+        <!--<section id="team" class="section-team team-1 py-60 py-lg-100 py-xxl-120">
+        <div class="container">
+            <div class="row mb-4">
+                <div class="col-lg-8 offset-lg-2 text-lg-center">
+                    <div class="contents-width">
+                        <div class="d-flex flex-column gap-20 wow fadeInUp">
+                            <h2 class="mb-0">Our Politiocal Party members</h2>
+                            <p class="mb-0">By adhering to this vision and mission, we are committed to making a positive difference in the lives of the people we serve and building a brighter future for our society.</p>
+                        </div>
+                    </div>-->
+        <!-- contents-width -->
+        <!--</div>-->
+        <!-- col-8 -->
+        <!--</div>-->
+        <!-- row -->
+        <!--<div class="swiper politixySwiper py-3 wow slideInUp">
+        <div class="swiper-wrapper">
+            <div class="swiper-slide">
+                <div class="card card-style-4">
+                    <div class="card-image-wrapper">
+                        <img src="assets/images/placeholder.svg" data-src="assets/images/team-1.jpg" class="card-img-top" alt="team-1">
+                    </div>-->
+        <!-- card-image-wrapper -->
+        <!--<div class="card-body">
+            <div class="d-flex flex-column gap-2 align-items-center">
+                <h4 class="card-title fw-semibold mb-0"><a href="team-single.html" class="text-decoration-none stretched-link link-hover-animation-1">David M.Smith</a></h4>
+                <p class="card-text lead">Senior Atorni</p>
+            </div>
+        </div>-->
+        <!-- card-body -->
+        <!--</div>-->
+        <!-- card -->
+        <!--</div>-->
+        <!-- swiper-slide -->
+        <!--<div class="swiper-slide">
+        <div class="card card-style-4">
+            <div class="card-image-wrapper">
+                <img src="assets/images/placeholder.svg" data-src="assets/images/team-2.jpg" class="card-img-top" alt="team-2">
+            </div>-->
+        <!-- card-image-wrapper -->
+        <!--<div class="card-body">
+            <div class="d-flex flex-column gap-2 align-items-center">
+                <h4 class="card-title fw-semibold mb-0"><a href="team-single.html" class="text-decoration-none stretched-link link-hover-animation-1">Morix E.angle</a></h4>
+                <p class="card-text lead">Vice President</p>
+            </div>
+        </div>-->
+        <!-- card-body -->
+        <!--</div>-->
+        <!-- card -->
+        <!--</div>-->
+        <!-- swiper-slide -->
+        <!--<div class="swiper-slide">
+        <div class="card card-style-4">
+            <div class="card-image-wrapper">
+                <img src="assets/images/placeholder.svg" data-src="assets/images/team-3.jpg" class="card-img-top" alt="team-3">
+            </div>-->
+        <!-- card-image-wrapper -->
+        <!--<div class="card-body">
+            <div class="d-flex flex-column gap-2 align-items-center">
+                <h4 class="card-title fw-semibold mb-0"><a href="team-single.html" class="text-decoration-none stretched-link link-hover-animation-1">Michel Alexon</a></h4>
+                <p class="card-text lead">Senior Atorni</p>
+            </div>
+        </div>-->
+        <!-- card-body -->
+        <!--</div>-->
+        <!-- card -->
+        <!--</div>-->
+        <!-- swiper-slide -->
+        <!--<div class="swiper-slide">
+        <div class="card card-style-4">
+            <div class="card-image-wrapper">
+                <img src="assets/images/placeholder.svg" data-src="assets/images/team-2.jpg" class="card-img-top" alt="team-2">
+            </div>-->
+        <!-- card-image-wrapper -->
+        <!--<div class="card-body">
+            <div class="d-flex flex-column gap-2 align-items-center">
+                <h4 class="card-title fw-semibold mb-0"><a href="team-single.html" class="text-decoration-none stretched-link link-hover-animation-1">Morix E.angle</a></h4>
+                <p class="card-text lead">Vice President</p>
+            </div>
+        </div>-->
+        <!-- card-body -->
+        <!--</div>-->
+        <!-- card -->
+        <!--</div>-->
+        <!-- swiper-slide -->
+        <!--<div class="swiper-slide">
+        <div class="card card-style-4">
+            <div class="card-image-wrapper">
+                <img src="assets/images/placeholder.svg" data-src="assets/images/team-3.jpg" class="card-img-top" alt="team-3">
+            </div>-->
+        <!-- card-image-wrapper -->
+        <!--<div class="card-body">
+            <div class="d-flex flex-column gap-2 align-items-center">
+                <h4 class="card-title fw-semibold mb-0"><a href="team-single.html" class="text-decoration-none stretched-link link-hover-animation-1">Michel Alexon</a></h4>
+                <p class="card-text lead">Senior Atorni</p>
+            </div>
+        </div>-->
+        <!-- card-body -->
+        <!--</div>-->
+        <!-- card -->
+        <!--</div>-->
+        <!-- swiper-slide -->
+        <!--</div>-->
+        <!-- swiper-wrapper -->
+        <!--</div>-->
+        <!-- swiper -->
+        <!--</div>-->
+        <!-- container -->
+        <!--</section>-->
+        <!--Team Section ======================-->
+        <!--Product Section ======================-->
+        <section class="section-product product-1 bg-custom-light py-60 py-lg-100 py-xxl-120">
+            <div class="container">
+                <div class="row gy-30 justify-content-between align-items-lg-end mb-4">
+                    <div class="col-lg-12">
+
+                        <div class="col-lg-9 offset-lg-2 text-lg-center">
+                            <div class="contents-width">
+                                <div class="d-flex flex-column gap-3 wow slideInUp">
+                                    <h2 class="mb-0">وظائف المجلس</h2>
+                                    <p class="mb-0">
+                                        تتضمن وظائف مجلس النواب مناقشة ودراسة القوانين التي تقدمها الحكومة، أو اقتراح قوانين جديدة من قبل عشرة نواب أو أكثر. بالإضافة إلى ذلك، يقوم المجلس بدور رقابي هام من خلال متابعة ومراقبة أعمال السلطة التنفيذية لضمان الشفافية والمساءلة
+
+
+
+                                    </p>
+                                </div>
+                            </div>
+                            <!-- contents-width -->
+                        </div>
+                        <!-- contents-width -->
+                    </div>
+                </div>
+                <!-- row -->
+                <div class="swiper politixySwiper py-3 wow fadeInUp">
+                    <div class="swiper-wrapper">
+                        <div class="swiper-slide">
+                            <div class="card">
+                                <div class="card-image-wrapper" style="width: 100%; height: 252px; ">
+                                    <img src="~/assets/images/Jordan/job2.png" class="card-img-top" alt="product-1">
+                                </div>
+                                <!-- card-image-wrapper -->
+                                <div class="card-body">
+                                    <div class="d-flex flex-column gap-10 align-items-center">
+                                        <h5 class="card-title fw-semibold mb-0"><a href="product-single.html" class="text-decoration-none stretched-link link-hover-animation-1"> الوظائف والبطالة</a></h5>
+                                    </div>
+                                </div>
+                                <!-- card-body -->
+                            </div>
+                            <!-- card -->
+                        </div>
+                        <!-- swiper-slide -->
+
+                        <div class="swiper-slide">
+                            <div class="card">
+                                <div class="card-image-wrapper" style="width: 100%; height: 252px; ">
+                                    <img src="~/assets/images/Jordan/street.jpg" class="card-img-top" alt="product-2">
+                                </div>
+                                <!-- card-image-wrapper -->
+                                <div class="card-body">
+                                    <div class="d-flex flex-column gap-10 align-items-center">
+                                        <h5 class="card-title fw-semibold mb-0"><a href="product-single.html" class="text-decoration-none stretched-link link-hover-animation-1"> الطرق والنقل</a></h5>
+                                    </div>
+                                </div>
+                                <!-- card-body -->
+                            </div>
+                            <!-- card -->
+                        </div>
+                        <!-- swiper-slide -->
+
+                        <div class="swiper-slide">
+                            <div class="card">
+                                <div class="card-image-wrapper" style="width: 100%; height: 252px; ">
+                                    <img src="~/assets/images/Jordan/medical.jpg" class="card-img-top" alt="product-3">
+                                </div>
+                                <!-- card-image-wrapper -->
+                                <div class="card-body">
+                                    <div class="d-flex flex-column gap-10 align-items-center">
+                                        <h5 class="card-title fw-semibold mb-0"><a href="product-single.html" class="text-decoration-none stretched-link link-hover-animation-1">الحلول الطبية</a></h5>
+                                    </div>
+                                </div>
+                                <!-- card-body -->
+                            </div>
+                            <!-- card -->
+                        </div>
+                        <!-- swiper-slide -->
+
+                        <div class="swiper-slide">
+                            <div class="card">
+                                <div class="card-image-wrapper" style="width: 100%; height: 252px; ">
+                                    <img src="~/assets/images/Jordan/law2.jpg" class="card-img-top" alt="product-2">
+                                </div>
+                                <!-- card-image-wrapper -->
+                                <div class="card-body">
+                                    <div class="d-flex flex-column gap-10 align-items-center">
+                                        <h5 class="card-title fw-semibold mb-0"><a href="product-single.html" class="text-decoration-none stretched-link link-hover-animation-1"> العدالة والقانون</a></h5>
+                                    </div>
+                                </div>
+                                <!-- card-body -->
+                            </div>
+                            <!-- card -->
+                        </div>
+                        <!-- swiper-slide -->
+
+                        <div class="swiper-slide">
+                            <div class="card">
+                                <div class="card-image-wrapper" style="width: 100%; height: 252px; ">
+                                    <img src="~/assets/images/Jordan/stu.jpg" class="card-img-top" alt="product-3">
+                                </div>
+                                <!-- card-image-wrapper -->
+                                <div class="card-body">
+                                    <div class="d-flex flex-column gap-10 align-items-center">
+                                        <h5 class="card-title fw-semibold mb-0"><a href="product-single.html" class="text-decoration-none stretched-link link-hover-animation-1">التعليم الإلكتروني</a></h5>
+                                    </div>
+                                </div>
+                                <!-- card-body -->
+                            </div>
+                            <!-- card -->
+                        </div>
+                        <!-- swiper-slide -->
+                    </div>
+                    <!-- swiper-wrapper -->
+                </div>
+                <!-- swiper -->
+            </div>
+            <!-- container -->
+        </section>
+        <!--Product Section ======================-->
+        <!--Blog Section ======================-->
+        <section class="section-blog blog-2 py-60 py-lg-100 py-xxl-120">
+            <div class="container">
+                <div class="blog-wrapper">
+                    <div class="row gy-30 mb-40" style="display: flex; justify-content: center; align-items: center;">
+                        <div class="col-lg-7" style="text-align: center;">
+                            <div class="contents-width d-flex flex-column gap-10">
+                                <div class="d-flex flex-column gap-3">
+                                    <h2 class="mb-0">موجز الأخبار</h2>
+                                    <p class="mb-0">أخر الأخبار في المملكة الأردنية الهاشمية</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- row -->
+
+                    <div class="row g-30">
+                        <div class="col-lg-4">
+                            <div class="card card-style-2 wow fadeInUp" data-wow-delay=".2s" data-wow-duration="1.2s">
+                                <div class="card-image-wrapper">
+                                    <img src="~/assets/images/Jordan/Mabrok.jpg" style="width:382px; height:300px" class="card-img-top" alt="campaign-4">
+                                </div>
+                                <!-- card-image-wrapper -->
+                                <div class="card-body">
+                                    <div class="d-flex flex-column gap-10">
+                                        <p class="extra-small mb-0 body-color-style-1">
+                                            ٣ أغسطس ٢٠٢٤ | تحديث إنتخب
+                                        </p>
+                                        <p class="card-text">إنتخب تهنئ ولي العهد والأميرة رجوة بقدوم الإميرة الصغيرة إيمان</p>
+                                    </div>
+                                </div>
+                                <!-- card-body -->
+                            </div>
+                            <!-- card -->
+                        </div>
+                        <!-- col-4 -->
+
+                        <div class="col-lg-4">
+                            <div class="card card-style-2 wow fadeInUp" data-wow-delay=".4s" data-wow-duration="1.2s">
+                                <div class="card-image-wrapper">
+                                    <img src="~/assets/images/Jordan/Ijra2at.jpeg " style="width:382px; height:300px" class="card-img-top" alt="campaign-8">
+                                </div>
+                                <!-- card-image-wrapper -->
+                                <div class="card-body">
+                                    <div class="d-flex flex-column gap-10">
+                                        <p class="extra-small mb-0 body-color-style-1">٢ أغسطس ٢٠٢٤ | تحديث إنتخب</p>
+                                        <p class="card-text">تمت إجراءات الترشح بكل دقة وسلاسة، مما ساهم في تحقيق نتائج متميزة وفعّالة.</p>
+                                    </div>
+                                </div>
+                                <!-- card-body -->
+                            </div>
+                            <!-- card -->
+                        </div>
+                        <!-- col-4 -->
+
+                        <div class="col-lg-4">
+                            <div class="card card-style-2 wow fadeInUp" data-wow-delay=".6s" data-wow-duration="1.2s">
+                                <div class="card-image-wrapper">
+                                    <img src="~/assets/images/Jordan/Women.jpg" style="width:382px; height:300px" class="card-img-top" alt="campaign-1">
+                                </div>
+                                <!-- card-image-wrapper -->
+                                <div class="card-body">
+                                    <div class="d-flex flex-column gap-10">
+                                        <p class="extra-small mb-0 body-color-style-1">٢٤ يوليو ٢٠٢٤ | تحديث إنتخب</p>
+                                        <p class="card-text">المستقلة للانتخاب تطلق الإطار المرجعي لتمكين المرأة في الانتخاب والأحزاب</p>
+                                    </div>
+                                </div>
+                                <!-- card-body -->
+                            </div>
+                            <!-- card -->
+                        </div>
+                        <!-- col-4 -->
+
+                    </div>
+                    <!-- row -->
+                </div>
+                <!-- portfolio-wrapper -->
+            </div>
+            <!-- container -->
+        </section>
+        <!--Blog Section ======================-->
+        <!--Testimonial Section ======================-->
+        <!--<section class="section-testimonial testimonial-1 bg-custom-light py-60 py-lg-100 py-xxl-120">
+        <div class="container">
+            <div class="d-flex flex-column gap-40">
+                <div class="row">
+                    <div class="col-lg-8 offset-lg-2 text-lg-center">
+                        <div class="contents-width d-flex flex-column gap-10 wow fadeInUp">
+                            <h6 class="subtitle lead text-primary mb-0">Testimonials</h6>
+                            <div class="d-flex flex-column gap-3">
+                                <h2 class="mb-0">What People Are Saying About Us</h2>
+                                <p class="mb-0">These testimonials reflect the positive impact Empower Politics is making on individuals and communities alike. We're grateful for the support and inspired to continue our mission</p>
+                            </div>
+                        </div>-->
+        <!-- contents-width -->
+        <!--</div>-->
+        <!-- col-8 -->
+        <!--</div>-->
+        <!-- row -->
+        <!--<div class="testimonial-swiper-wrapper wow slideInUp">
+        <div class="swiper testimonialSwiper">
+            <div class="swiper-wrapper">
+                <div class="swiper-slide">
+                    <div class="row gx-5 gy-40 gy-lg-0 align-items-center">
+                        <div class="col-lg-6">
+                            <div class="testimonial-image-wrapper position-relative">
+                                <img src="assets/images/testimonial-1.jpg" class="img-fluid" alt="testimonial-1">
+                                <a href="https://www.youtube.com/watch?v=lfDZJqSrIuk" class="video-popup video-popup-style-1">
+                                    <span class="video-icon">
+                                        <svg width="21" height="26"><use xlink:href="#video-icon"></use></svg>
+                                    </span>
+                                </a>
+                            </div>
+                        </div>-->
+        <!-- col-5 -->
+        <!--<div class="col-lg-6">
+        <div class="testimonial-contents">
+            <h4 class="mb-2 heading-color-style-1">Ligvy E.angle</h4>
+            <p class="mb-20 body-color-style-1">High School Educator</p>
+            <p class="mb-0 testimonial-text">As a teacher, I've witnessed firsthand the impact Empower Politic has had on my students. They've become more informed, more passionate, and more engaged citizens, thanks to the resources and opportunities provided by this organization.</p>
+        </div>-->
+        <!-- testimonial-contents -->
+        <!--</div>-->
+        <!-- col-7 -->
+        <!--</div>-->
+        <!-- row -->
+        <!--</div>-->
+        <!-- swiper-slide -->
+        <!--<div class="swiper-slide">
+        <div class="row gx-5 gy-40 gy-lg-0 align-items-center">
+            <div class="col-lg-6">
+                <div class="testimonial-image-wrapper position-relative">
+                    <img src="assets/images/portfolio-1.jpg" class="img-fluid" alt="portfolio-1">
+                    <a href="https://www.youtube.com/watch?v=lfDZJqSrIuk" class="video-popup video-popup-style-1">
+                        <span class="video-icon">
+                            <svg width="21" height="26"><use xlink:href="#video-icon"></use></svg>
+                        </span>
+                    </a>
+                </div>
+            </div>-->
+        <!-- col-5 -->
+        <!--<div class="col-lg-6">
+        <div class="testimonial-contents">
+            <h4 class="mb-2 heading-color-style-1">Breat Lee</h4>
+            <p class="mb-20 body-color-style-1">Businessman</p>
+            <p class="mb-0 testimonial-text">As a Businessman, I've witnessed firsthand the impact Empower Politic has had on my students. They've become more informed, more passionate, and more engaged citizens, thanks to the resources and opportunities provided by this organization.</p>
+        </div>-->
+        <!-- testimonial-contents -->
+        <!--</div>-->
+        <!-- col-7 -->
+        <!--</div>-->
+        <!-- row -->
+        <!--</div>-->
+        <!-- swiper-slide -->
+        <!--<div class="swiper-slide">
+        <div class="row gx-5 gy-40 gy-lg-0 align-items-center">
+            <div class="col-lg-6">
+                <div class="testimonial-image-wrapper position-relative">
+                    <img src="assets/images/event-2.jpg" class="img-fluid" alt="event-2">
+                    <a href="https://www.youtube.com/watch?v=lfDZJqSrIuk" class="video-popup video-popup-style-1">
+                        <span class="video-icon">
+                            <svg width="21" height="26"><use xlink:href="#video-icon"></use></svg>
+                        </span>
+                    </a>
+                </div>
+            </div>-->
+        <!-- col-5 -->
+        <!--<div class="col-lg-6">
+        <div class="testimonial-contents">
+            <h4 class="mb-2 heading-color-style-1">John Smith</h4>
+            <p class="mb-20 body-color-style-1">Student</p>
+            <p class="mb-0 testimonial-text">As a student, I've witnessed firsthand the impact Empower Politic has had on my students. They've become more informed, more passionate, and more engaged citizens, thanks to the resources and opportunities provided by this organization.</p>
+        </div>-->
+        <!-- testimonial-contents -->
+        <!--</div>-->
+        <!-- col-7 -->
+        <!--</div>-->
+        <!-- row -->
+        <!--</div>-->
+        <!-- swiper-slide -->
+        <!--</div>-->
+        <!-- swiper-wrapper -->
+        <!--<div class="testimonialSwiper-buttons d-flex gap-10">
+            <div class="politixySwiper-button-prev">
+                <span class="arrow-icon arrow-reverse">
+                    <svg width="16" height="16"><use xlink:href="#arrow-icon"></use></svg>
+                </span>
+            </div>
+            <div class="politixySwiper-button-next">
+                <span class="arrow-icon">
+                    <svg width="16" height="16"><use xlink:href="#arrow-icon"></use></svg>
+                </span>
+            </div>
+        </div>-->
+        <!-- testimonialSwiper-buttons -->
+        <!--</div>-->
+        <!-- testimonialSwiper -->
+        <!--</div>-->
+        <!-- testimonial-swiper-wrapper -->
+        <!--</div>-->
+        <!-- d-flex -->
+        <!--</div>-->
+        <!-- container -->
+        <!--</section>-->
+        <!--Testimonial Section ======================-->
+        <!--Portfolio Section ======================-->
+        <!--<section class="section-portfolio portfolio-1 py-60 py-lg-100 py-xxl-120">
+        <div class="container">
+
+            <div class="d-flex flex-column gap-60 gap-lg-100 gap-xxl-120">
+                <div class="portfolio-wrapper">
+                    <div class="row gy-30 justify-content-between align-items-lg-end mb-40">
+                        <div class="col-lg-8 col-xl-9">
+                            <div class="contents-width d-flex flex-column gap-10">
+                                <h6 class="subtitle lead text-primary mb-0">Portfolio</h6>
+                                <div class="d-flex flex-column gap-3">
+                                    <h2 class="mb-0">View the City Beautiful Highlights Gallery.</h2>
+                                    <p class="mb-0">By adhering to this vision and mission, we are committed to making a positive difference in the lives of the people we serve and building a brighter future for our society.</p>
+                                </div>
+                            </div>-->
+        <!-- contents-width -->
+        <!--</div>-->
+        <!-- col-9 -->
+        <!--<div class="col-lg-3">
+            <div class="d-flex justify-content-lg-end">
+                <a href="gallery-2.html" class="btn btn-primary">All Portfolio</a>
+            </div>
+        </div>-->
+        <!-- col-2 -->
+        <!--</div>-->
+        <!-- row -->
+        <!--<div class="row g-30">
+        <div class="col-lg-4">
+            <div class="d-flex flex-column gap-30 wow fadeInLeft">
+                <div class="politixy-image portfolio-image-style-1">
+                    <a href="assets/images/portfolio-1.jpg" class="image-link stretched-link">
+                        <img src="assets/images/placeholder.svg" data-src="assets/images/portfolio-1.jpg" class="img-fluid" alt="portfolio-1">
+                    </a>
+                </div>-->
+        <!-- politixy-image -->
+        <!--<div class="politixy-image portfolio-image-style-2 position-relative active">
+                    <img src="assets/images/placeholder.svg" data-src="assets/images/portfolio-3.jpg" class="img-fluid" alt="portfolio-3">
+                    <a href="https://www.youtube.com/watch?v=lfDZJqSrIuk" class="video-popup video-popup-style-2">
+                        <span class="video-icon">
+                            <svg width="14" height="16"><use xlink:href="#video-icon"></use></svg>
+                        </span>
+                    </a>
+                </div>
+            </div>
+        </div>-->
+        <!-- col-4 -->
+        <!--<div class="col-lg-4">
+            <div class="politixy-image portfolio-image-style-3 wow fadeInUpBig">
+                <a href="assets/images/portfolio-2.jpg" class="image-link stretched-link">
+                    <img src="assets/images/placeholder.svg" data-src="assets/images/portfolio-2.jpg" class="img-fluid" alt="portfolio-2">
+                </a>
+            </div>
+        </div>-->
+        <!-- col-4 -->
+        <!--<div class="col-lg-4">
+        <div class="d-flex flex-column gap-30 wow fadeInRight">
+            <div class="politixy-image portfolio-image-style-2">
+                <a href="assets/images/campaign-1.jpg" class="image-link stretched-link">
+                    <img src="assets/images/placeholder.svg" data-src="assets/images/campaign-1.jpg" class="img-fluid" alt="campaign-1.jpg-1">
+                </a>
+            </div>
+            <div class="politixy-image portfolio-image-style-1 active">
+                <a href="assets/images/portfolio-4.jpg" class="image-link stretched-link">
+                    <img src="assets/images/placeholder.svg" data-src="assets/images/portfolio-4.jpg" class="img-fluid" alt="portfolio-4">
+                </a>
+                <div class="hover-contents">
+                    <h4 class="mb-0 text-center"><a href="gallery-1.html" class="text-decoration-none link-hover-animation-1">ViewAll The Portfolio</a></h4>
+                </div>-->
+        <!-- hover-contents -->
+        <!--</div>
+            </div>
+        </div>-->
+        <!-- col-4 -->
+        <!--</div>
+        </div>-->
+        <!-- portfolio-wrapper -->
+        <!--<div class="volunteer-wrapper parallax position-relative text-bg-dark border-10 overflow-hidden wow fadeInDown" data-bs-theme="dark">
+        <div class="py-40 py-lg-60 px-3">
+            <div class="row">
+                <div class="col-lg-7 offset-lg-3">
+                    <div class="volunteer-inner d-flex flex-column gap-20 text-lg-center">
+                        <h2 class="mb-0">Become a Volunteer</h2>
+                        <p class="mb-3 mb-lg-20">Support Humanity & Country" campaign is a testament to our collective commitment towards fostering goodwill and progress within our society and nation.</p>
+                        <div>
+                            <a href="volunteer-1.html" class="btn btn-primary">Join Us Now</a>
+                        </div>
+                    </div>
+                </div>-->
+        <!-- col -->
+        <!--</div>-->
+        <!-- row -->
+        <!--</div>-->
+        <!-- volunteer-inner -->
+        <!--</div>-->
+        <!-- volunteer-wrapper -->
+        <!--</div>-->
+        <!-- d-flex -->
+        <!--</div>-->
+        <!-- container -->
+        @*</section>*@
+        <!--Portfolio Section ======================-->
+        <!-- Modal-Map -->
+
+        <div class="modal modal-fullscreen routing-map-modal fade" id="RoutingMapModal" tabindex="-1" aria-labelledby="RoutingMapLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="RoutingMapLabel">المملكة الأردنية الهاشمية </h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div id="RoutingMap"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Modal-Map -->
+        <!-- SVG ======================-->
+        <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+
+            <symbol id="chevron-down-icon" viewBox="0 0 12 8" fill="none">
+                <path d="M1 1.5L6 6.5L11 1.5" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+            </symbol>
+
+            <symbol id="chevron-right-icon" viewBox="0 0 9 14" fill="none">
+                <path d="M1 1L7 7L1 13" stroke-width="1.5" />
+            </symbol>
+
+
+            <symbol id="arrow-icon" viewBox="0 0 16 16">
+                <path d="M14 7.99984L10.6667 4.6665M14 7.99984L10.6667 11.3332M14 7.99984H2" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+            </symbol>
+
+            <symbol id="video-icon" viewBox="0 0 21 26">
+                <path d="M0.500998 12.9718C0.500998 9.35922 0.500998 5.74709 0.500998 2.13545C0.500998 1.53824 0.578769 0.996786 1.15397 0.676903C1.72917 0.35702 2.23247 0.572721 2.73578 0.897006C8.36356 4.51647 13.9928 8.13594 19.6235 11.7554C20.8194 12.5243 20.8165 13.4898 19.6162 14.2602C14.0041 17.8699 8.39143 21.4786 2.77833 25.0863C2.26182 25.4179 1.75118 25.6732 1.14663 25.3299C0.572897 25.0056 0.49953 24.4641 0.500998 23.8625C0.506867 20.2333 0.506867 16.603 0.500998 12.9718Z" />
+            </symbol>
+
+
+            <symbol id="migration-icon" viewBox="0 0 40 40">
+                <g clip-path="url(#clip0_237_2862)">
+                    <path d="M21.6258 24.6508C21.4327 20.6794 24.4523 18.0989 27.5168 17.9322C30.5341 17.7725 33.7422 19.8955 34.0871 23.8462C35.8894 23.7243 37.4423 24.2841 38.6619 25.6474C39.5285 26.5893 40.0073 27.8239 40.0022 29.1038C40.0091 30.751 39.3677 32.12 38.1285 33.1947C36.8894 34.2695 35.4285 34.5867 33.7997 34.4695V35.112C33.7997 36.4626 33.7997 37.8133 33.7997 39.1627C33.7997 39.7375 33.5503 39.9961 32.9951 39.9961C29.8494 40.0007 26.7033 40.0007 23.5569 39.9961C23.0097 39.9961 22.766 39.7294 22.7649 39.1535C22.7649 37.6179 22.7649 36.081 22.7649 34.4787C22.281 34.4787 21.8131 34.4867 21.3453 34.4787C19.2016 34.4316 17.2705 32.912 16.7314 30.8533C15.9406 27.8325 18.0119 24.9566 21.174 24.6842C21.312 24.6715 21.4545 24.6623 21.6258 24.6508ZM33.7951 33.1016C34.1652 33.1016 34.4664 33.1097 34.7675 33.1016C35.7318 33.0724 36.6527 32.6941 37.3591 32.0371C38.0654 31.38 38.5092 30.4888 38.6079 29.5291C38.7011 28.5831 38.4444 27.6356 37.8863 26.8661C37.3281 26.0966 36.5073 25.5583 35.5791 25.3531C34.9675 25.2232 34.2986 25.2819 33.6675 25.3531C32.9675 25.4325 32.6468 25.2129 32.6663 24.5163C32.6663 24.3577 32.6767 24.2002 32.6744 24.0416C32.6468 21.7829 30.987 19.799 28.7938 19.4035C26.4351 18.9771 24.1707 20.2254 23.3454 22.4048C23.0059 23.2807 22.9354 24.2381 23.1431 25.1543C23.3063 25.8957 22.9683 26.244 22.2086 26.1279C22.1235 26.1141 22.0384 26.1037 21.9522 26.0911C21.236 25.9947 20.5073 26.1192 19.8637 26.4478C19.22 26.7764 18.6919 27.2936 18.3498 27.9302C18.0119 28.561 17.8757 29.2803 17.9598 29.991C18.0439 30.7017 18.3441 31.3694 18.8199 31.9039C19.8866 33.1016 21.266 33.2016 22.7603 33.0683V32.5901C22.7603 31.197 22.7603 29.8038 22.7603 28.4107C22.7603 27.8429 23.0109 27.5888 23.5649 27.5865C24.8584 27.5812 26.1516 27.5812 27.4443 27.5865C27.9535 27.5865 28.2628 27.8509 28.2674 28.267C28.2719 28.6831 27.9604 28.9567 27.4627 28.9636C26.5719 28.9636 25.6811 28.9636 24.7902 28.9636H24.1741V33.0775H32.387V28.9636C31.7272 28.9636 31.0973 28.9636 30.4674 28.9636C29.964 28.9636 29.6547 28.6843 29.6628 28.2659C29.6708 27.8475 29.9685 27.5911 30.4444 27.5877C31.3065 27.5808 32.1686 27.5785 33.0307 27.5877C33.5342 27.5934 33.7859 27.8567 33.7951 28.3705C33.8031 28.8165 33.7951 29.2613 33.7951 29.7073V33.1016ZM24.158 38.5914H32.3801V34.504H24.158V38.5914Z" />
+                    <path d="M6.2097 20.0603C5.37404 19.9936 4.58551 20.0189 3.83837 19.8545C2.68929 19.6068 1.66882 18.9512 0.965765 18.0092C0.262709 17.0671 -0.0753553 15.9023 0.0141151 14.7302C0.183086 12.3049 2.12108 10.406 4.63954 10.1991L5.0338 10.1692C5.10737 9.51858 5.12576 8.88522 5.2568 8.27601C5.90165 5.28742 8.69023 3.23793 11.7627 3.45863C13.2307 3.57062 14.6118 4.19789 15.662 5.2296C16.7122 6.2613 17.3639 7.63102 17.502 9.09673C17.5181 9.28179 17.6663 9.45421 17.7514 9.63352C17.8169 9.77375 17.9169 9.91054 17.9342 10.0565C17.9893 10.5577 17.5296 10.8933 16.8089 10.9002C16.3709 10.9002 16.0847 10.6014 16.1192 10.1071C16.1996 8.85534 15.9077 7.71623 15.1387 6.71275C14.4747 5.84976 13.5386 5.23655 12.4822 4.97271C11.4258 4.70887 10.3112 4.80988 9.31947 5.25936C8.32772 5.70883 7.51704 6.48036 7.01908 7.44866C6.52111 8.41697 6.3651 9.52517 6.57638 10.5933C6.75224 11.4658 6.46143 11.7635 5.566 11.6278C3.26709 11.283 1.31301 12.9658 1.39002 15.2348C1.44519 17.0016 2.90615 18.5016 4.69356 18.605C5.17863 18.6338 5.66716 18.605 6.21315 18.605V18.1349C6.21315 16.7418 6.21315 15.3475 6.21315 13.9543C6.21315 13.3371 6.45683 13.0968 7.07754 13.0968C10.1811 13.0968 13.2846 13.0968 16.3882 13.0968C17.0054 13.0968 17.2457 13.3405 17.2468 13.9612C17.2468 15.3406 17.2468 16.7199 17.2468 18.0993V18.5591C19.2675 18.9269 21.2262 17.7993 21.8642 15.9257C22.5021 14.052 21.6768 12.0796 19.8492 11.1313C19.5308 10.9657 19.2423 10.7519 19.34 10.3853C19.429 10.1275 19.6144 9.9141 19.8572 9.78985C20.0135 9.71398 20.3055 9.81859 20.4963 9.91974C22.3814 10.9209 23.4205 12.4957 23.4378 14.6325C23.455 16.7694 22.4274 18.3556 20.5641 19.3867C19.8026 19.7996 18.9475 20.0094 18.0813 19.9959H17.2445V20.4706C17.2445 21.85 17.2445 23.2293 17.2445 24.6087C17.2445 25.2834 17.0146 25.5133 16.3399 25.5133C13.2655 25.5133 10.191 25.5133 7.11662 25.5133C6.44074 25.5133 6.212 25.2834 6.212 24.6087C6.2097 23.0902 6.2097 21.5695 6.2097 20.0603ZM7.60859 18.5878H15.8307V14.5038H7.60859V18.5878ZM15.8468 20.0292H7.62468V24.1132H15.8468V20.0292Z" />
+                    <path d="M34.0135 12.8589C34.0756 11.0025 33.6353 9.35075 32.6457 7.8599C32.0191 6.90591 31.2016 6.0922 30.2446 5.47016C29.2877 4.84811 28.2122 4.43125 27.086 4.24589C25.9598 4.06053 24.8075 4.11071 23.7016 4.39325C22.5958 4.67579 21.5606 5.18456 20.6614 5.88743C20.0303 6.37365 19.8051 6.35871 19.282 5.78743C18.759 5.21615 18.228 4.64947 17.7096 4.07244C17.3015 3.61266 17.3395 3.26092 17.8245 2.8678C25.2581 -3.23467 36.4239 0.92522 37.9872 10.4071C38.1722 11.5267 38.0768 12.6934 38.0826 13.8382C38.0826 14.0624 38.0998 14.175 38.3355 14.2359C38.7105 14.3154 39.0755 14.4361 39.424 14.5957C39.6539 14.7107 39.9252 14.9578 39.9551 15.1774C39.9849 15.3969 39.7999 15.7429 39.6022 15.8751C38.1573 16.8383 36.6894 17.7659 35.2216 18.6936C34.7319 19.0039 34.3273 18.8821 34.1066 18.3487C33.4365 16.7337 32.7686 15.1164 32.1353 13.4865C32.0537 13.2762 32.1203 12.944 32.2376 12.7359C32.3916 12.4635 32.7043 12.4428 33.0066 12.5428C33.3089 12.6428 33.6319 12.7417 34.0135 12.8589ZM37.6803 15.49C37.5331 15.436 37.4665 15.4084 37.3987 15.3866C36.594 15.1164 36.5113 14.9957 36.6389 14.1762C36.8459 12.9261 36.8296 11.6492 36.5906 10.4048C35.3791 4.37475 29.9674 0.596475 23.8868 1.54593C22.158 1.82419 20.525 2.52634 19.1338 3.58966C19.4533 3.9345 19.7499 4.2621 20.0533 4.59774L20.4384 4.34716C22.5178 3.01608 24.7845 2.47124 27.2202 2.8816C32.333 3.73909 35.7147 8.08405 35.3469 13.2486C35.2653 14.4061 35.117 14.5314 33.9491 14.3497C34.3319 15.2866 34.7066 16.2004 35.0917 17.1418L37.6803 15.49Z" />
+                    <path d="M28.234 31.7227C27.8029 31.7227 27.3719 31.733 26.9408 31.7227C26.5098 31.7123 26.2109 31.4273 26.2109 31.033C26.2109 30.6387 26.4994 30.3525 26.9397 30.3433C27.8301 30.3318 28.7206 30.3318 29.611 30.3433C30.0524 30.3433 30.3409 30.6364 30.3421 31.033C30.3432 31.4296 30.0524 31.7077 29.6122 31.7227C29.1535 31.7319 28.6926 31.7227 28.234 31.7227Z" />
+                    <path d="M28.2421 37.2401C27.8111 37.2401 27.38 37.2482 26.949 37.2401C26.5179 37.2321 26.2168 36.9528 26.211 36.5631C26.2053 36.1734 26.4938 35.8734 26.9317 35.8734C27.8214 35.8619 28.7122 35.8631 29.6031 35.8734C30.0456 35.8792 30.3364 36.1608 30.3422 36.5505C30.3479 36.9401 30.0468 37.2401 29.5778 37.247C29.1329 37.247 28.6869 37.2401 28.2421 37.2401Z" />
+                    <path d="M11.7253 17.2395C11.2804 17.2395 10.8344 17.2499 10.3896 17.2395C9.94476 17.2292 9.65625 16.9407 9.65625 16.5499C9.65625 16.159 9.94477 15.8694 10.385 15.8602C11.2762 15.8487 12.1667 15.8487 13.0563 15.8602C13.4977 15.8602 13.7863 16.1533 13.7874 16.5441C13.7886 16.9349 13.4977 17.2188 13.0575 17.2338C12.6173 17.2487 12.1713 17.2395 11.7253 17.2395Z" />
+                    <path d="M11.6804 22.7571C11.2494 22.7571 10.8184 22.7675 10.3873 22.7571C9.95626 22.7468 9.6574 22.4629 9.65625 22.0674C9.6551 21.672 9.94476 21.387 10.3839 21.3778C11.2751 21.3663 12.1655 21.3663 13.0552 21.3778C13.4966 21.3778 13.7863 21.6697 13.7874 22.0605C13.7885 22.4514 13.4977 22.7364 13.0586 22.7502C12.6 22.7663 12.1391 22.7571 11.6804 22.7571Z" />
+                </g>
+                <defs>
+                    <clipPath id="clip0_237_2862">
+                        <rect width="39.9977" height="40" fill="white" />
+                    </clipPath>
+                </defs>
+            </symbol>
+
+            <symbol id="human-rights-icon" viewBox="0 0 46 40">
+                <g clip-path="url(#clip0_237_2887)">
+                    <path d="M45.0249 14.1052C44.4097 15.8703 43.7949 17.6353 43.1805 19.4003C42.7584 20.6162 42.3445 21.8356 41.9271 23.0526C41.4873 24.3446 40.8224 25.5485 39.9632 26.6088C38.3908 28.5587 36.8419 30.5285 35.2497 32.4632C34.6164 33.2034 34.2846 34.1547 34.3199 35.1283C34.3492 36.5048 34.3328 37.8825 34.3199 39.2602C34.3199 39.7292 34.069 39.9848 33.675 39.9883C33.281 39.9918 33.0383 39.7292 33.0079 39.2731C33.0079 39.1863 33.0079 39.0972 33.0079 39.0092V34.9653C33.0079 34.9066 33.0079 34.848 33.0079 34.7894C33.0031 33.7253 33.3697 32.6928 34.0443 31.8699C35.673 29.8508 37.2898 27.8236 38.9173 25.8045C39.6759 24.8707 40.2648 23.8112 40.6573 22.6739C41.6336 19.8232 42.6138 16.974 43.5979 14.1263C43.8723 13.3279 43.4221 12.6806 42.6716 12.7791C42.2343 12.8366 42.0361 13.145 41.8896 13.519C41.0297 15.7077 40.1672 17.8991 39.3019 20.0932C39.2414 20.2735 39.1669 20.4487 39.0791 20.6173C38.902 20.9163 38.6288 21.0465 38.2935 20.9222C37.9582 20.7979 37.7893 20.5188 37.8843 20.1518C37.9596 19.8999 38.0505 19.6528 38.1563 19.412C39.0123 17.2335 39.8623 15.0526 40.7288 12.8788C40.8909 12.4338 41.1937 12.0538 41.5913 11.7965C41.9889 11.5392 42.4596 11.4186 42.9319 11.453C43.8641 11.4929 44.6133 12.0862 44.9334 13.0347C44.9597 13.1002 44.9898 13.164 45.0237 13.2259L45.0249 14.1052Z" />
+                    <path d="M0 13.2258C0.0335016 13.1635 0.0632591 13.0993 0.0891115 13.0335C0.40686 12.0897 1.16313 11.4917 2.09175 11.4518C2.56429 11.4181 3.03494 11.5393 3.43246 11.7969C3.82998 12.0546 4.13274 12.4348 4.29489 12.8799C5.0406 14.7395 5.76755 16.6073 6.50271 18.4716C6.695 18.9617 6.89198 19.4506 7.07841 19.9431C7.26484 20.4355 7.12297 20.7838 6.72666 20.9268C6.36318 21.0593 6.03137 20.8764 5.84963 20.418C4.94563 18.1328 4.05921 15.8452 3.13293 13.5647C3.01568 13.2704 2.74366 12.9432 2.46343 12.8342C2.22893 12.7427 1.83028 12.8788 1.59344 13.0429C1.28507 13.2563 1.25575 13.6292 1.38355 13.9997C1.86194 15.3821 2.33329 16.768 2.80815 18.1503C3.33109 19.6746 3.86341 21.1988 4.37814 22.7161C4.76074 23.8243 5.33588 24.8563 6.07709 25.7646C7.65646 27.7285 9.21823 29.7054 10.8175 31.6529C11.6311 32.6103 12.0594 33.8361 12.0193 35.0919C11.9936 36.3957 12.0193 37.7007 12.0123 39.0045C12.0179 39.1508 12.0093 39.2973 11.9865 39.4419C11.9126 39.8124 11.6735 40.0035 11.2983 39.9777C11.1428 39.9777 10.9937 39.9159 10.8837 39.806C10.7738 39.696 10.712 39.5469 10.712 39.3914C10.6909 39.0268 10.6991 38.6598 10.6991 38.2928C10.6991 37.1648 10.6921 36.0369 10.6991 34.9078C10.7172 34.0807 10.4366 33.2748 9.90884 32.6378C8.28492 30.634 6.68093 28.6149 5.0617 26.6088C4.20999 25.5602 3.55028 24.3694 3.113 23.0913C2.09683 20.1311 1.08379 17.1697 0.0738684 14.2072C0.0539779 14.1693 0.0291372 14.1342 0 14.1029V13.2258Z" />
+                    <path d="M26.145 16.8311V17.3692C26.145 19.7283 26.1602 22.0862 26.1367 24.4441C26.1215 26.0516 24.5328 27.0659 23.1117 26.4046C22.93 26.3101 22.7542 26.2048 22.5852 26.0892C22.1502 26.2603 21.7469 26.5042 21.3178 26.5699C20.0022 26.7716 18.9024 25.7913 18.893 24.4301C18.8766 22.085 18.893 19.74 18.8871 17.395V16.8311C18.7429 16.8522 18.6339 16.8604 18.5354 16.8826C18.2199 16.9559 17.8919 16.9563 17.5763 16.8838C17.2607 16.8114 16.9656 16.6681 16.7137 16.4647C16.4617 16.2613 16.2593 16.0032 16.1219 15.7099C15.9845 15.4166 15.9157 15.0959 15.9207 14.7721C15.9066 13.0439 15.9066 11.3156 15.9207 9.58732C15.9383 7.5753 17.445 5.99711 19.4535 5.95256C21.503 5.90644 23.5533 5.90644 25.6044 5.95256C27.5977 5.99946 29.0997 7.57061 29.1219 9.55684C29.1407 11.2558 29.1313 12.9571 29.1219 14.6549C29.1219 16.2249 27.9401 17.1699 26.4064 16.851C26.3197 16.8394 26.2324 16.8327 26.145 16.8311ZM24.8259 17.456C24.8259 15.1845 24.8259 12.9129 24.8259 10.6414C24.8181 10.4517 24.8411 10.2621 24.8939 10.0798C24.9947 9.78196 25.2456 9.65298 25.5505 9.67995C25.6919 9.68261 25.8276 9.73629 25.9325 9.8311C26.0374 9.92591 26.1046 10.0554 26.1215 10.1959C26.1417 10.3411 26.1483 10.4879 26.1414 10.6344C26.1414 11.9827 26.1356 13.3311 26.1414 14.6783C26.1414 15.2576 26.4815 15.607 26.9798 15.6046C27.4781 15.6023 27.7923 15.247 27.7935 14.6666C27.7935 12.9665 27.8052 11.2663 27.7935 9.56622C27.7829 8.29171 26.8332 7.29039 25.5517 7.26928C23.5303 7.23411 21.5081 7.23411 19.4851 7.26928C18.8974 7.27002 18.3331 7.50023 17.9126 7.91088C17.4921 8.32153 17.2486 8.88015 17.2339 9.46773C17.2093 11.2265 17.221 12.9852 17.2339 14.744C17.2339 15.2576 17.5681 15.5988 18.0336 15.607C18.499 15.6152 18.8344 15.2974 18.8813 14.7862C18.893 14.6549 18.8813 14.5224 18.8813 14.3899C18.8813 13.0568 18.8813 11.7236 18.8813 10.3893C18.8813 9.95197 19.1228 9.69871 19.4992 9.68581C19.8756 9.67291 20.157 9.93087 20.1921 10.3764C20.2027 10.5077 20.1921 10.6402 20.1921 10.7716C20.1921 15.1981 20.1921 19.6244 20.1921 24.0502C20.1863 24.2258 20.191 24.4016 20.2062 24.5766C20.2311 24.7694 20.3244 24.9469 20.469 25.0768C20.6135 25.2067 20.7999 25.2805 20.9943 25.2847C21.1886 25.289 21.378 25.2234 21.5282 25.1C21.6783 24.9765 21.7792 24.8033 21.8125 24.6118C21.8356 24.4373 21.8447 24.2613 21.8395 24.0853C21.8395 21.1103 21.8395 18.1353 21.8395 15.1602C21.8395 14.4567 22.0635 14.1249 22.516 14.1366C22.9686 14.1484 23.1598 14.4708 23.1598 15.1485C23.1598 18.1243 23.1598 21.0994 23.1598 24.0736C23.1531 24.2785 23.1673 24.4836 23.202 24.6857C23.2492 24.8634 23.3554 25.0198 23.503 25.1293C23.6507 25.2389 23.8311 25.2951 24.0149 25.2889C24.1986 25.2826 24.3748 25.2142 24.5147 25.0949C24.6545 24.9755 24.7498 24.8122 24.7848 24.6317C24.8064 24.4571 24.8138 24.2811 24.8071 24.1053C24.8165 21.8877 24.8208 19.672 24.82 17.4583L24.8259 17.456Z" />
+                    <path d="M29.118 35.1123C29.118 36.4607 29.118 37.8091 29.118 39.1563C29.118 39.7085 28.8753 40.0017 28.4438 39.9899C28.0382 39.9782 27.8013 39.6827 27.8013 39.1598C27.8013 36.4783 27.7825 33.7968 27.8013 31.1152C27.8083 29.5149 28.4135 27.975 29.4979 26.7981C30.9135 25.2144 32.3354 23.6354 33.7635 22.0612C34.5842 21.156 35.7931 21.0188 36.6748 21.7176C37.5882 22.4411 37.7301 23.6347 36.9996 24.6606C36.1109 25.9164 35.2127 27.1651 34.3169 28.4126C34.0015 28.8523 33.6134 28.9578 33.2792 28.7057C32.9451 28.4537 32.9404 28.0796 33.2394 27.6575C34.0883 26.4639 34.9391 25.2719 35.7919 24.0814C35.8994 23.9424 35.9936 23.7936 36.0733 23.637C36.1485 23.4915 36.1691 23.324 36.1314 23.1646C36.0938 23.0053 36.0004 22.8647 35.8681 22.7682C35.7509 22.6659 35.6037 22.6043 35.4486 22.5927C35.2934 22.5811 35.1387 22.62 35.0075 22.7037C34.955 22.7307 34.9078 22.7668 34.868 22.8104C33.2699 24.6032 31.6413 26.3713 30.09 28.2039C29.3596 29.0669 29.1239 30.162 29.1192 31.2899C29.1133 32.5621 29.118 33.8331 29.118 35.1123Z" />
+                    <path d="M17.2252 35.0834C17.2252 36.4459 17.2252 37.8083 17.2252 39.1719C17.2252 39.5038 17.1455 39.7887 16.823 39.9364C16.3681 40.1439 15.9155 39.8192 15.9073 39.2763C15.8968 38.4122 15.9073 37.5468 15.9073 36.6827C15.9073 34.924 15.9073 33.1652 15.9073 31.4064C15.9377 29.9836 15.4148 28.6045 14.4487 27.5594C13.0917 26.061 11.7387 24.5586 10.3895 23.0523C10.3215 22.9761 10.2535 22.8976 10.1785 22.8284C9.8654 22.5353 9.44564 22.513 9.14431 22.7686C9.00048 22.8863 8.90695 23.0545 8.88277 23.2388C8.85859 23.4231 8.90558 23.6097 9.01416 23.7605C9.27915 24.165 9.56993 24.5508 9.85133 24.9448C10.4974 25.8511 11.1469 26.7551 11.7895 27.6638C12.085 28.08 12.058 28.474 11.7344 28.7085C11.4108 28.943 11.0203 28.8469 10.7248 28.4341C9.81146 27.1608 8.89691 25.8875 7.99408 24.6071C7.30465 23.628 7.4477 22.4485 8.32473 21.7309C9.20176 21.0134 10.4141 21.1283 11.2079 21.9994C12.6689 23.6019 14.12 25.2137 15.5614 26.8348C16.6765 28.0918 17.2111 29.582 17.2229 31.2575C17.2358 32.5332 17.2252 33.8077 17.2252 35.0834Z" />
+                    <path d="M35.0831 18.2973C35.0831 18.6244 35.0936 18.9164 35.0831 19.206C35.0631 19.6422 34.7841 19.9201 34.4007 19.9095C34.036 19.8978 33.7722 19.6234 33.771 19.206C33.7663 16.5116 33.7663 13.8148 33.771 11.1157C33.771 10.6807 34.0595 10.3982 34.4429 10.4122C34.8263 10.4263 35.0807 10.7065 35.0831 11.1579C35.0901 12.7396 35.0831 14.3237 35.0831 15.9042C35.0831 16.0508 35.076 16.1974 35.0901 16.3428C35.1042 16.5342 35.1857 16.7145 35.32 16.8517C35.4544 16.9888 35.6329 17.0739 35.8241 17.092C36.0228 17.1152 36.223 17.0633 36.3853 16.9463C36.5476 16.8293 36.6603 16.6559 36.7011 16.46C36.7309 16.317 36.7443 16.1711 36.741 16.025C36.741 14.1936 36.741 12.3625 36.741 10.5318C36.741 8.96301 35.7901 8.02031 34.2201 8.01445C33.1508 8.01445 32.0814 8.01445 31.0121 8.01445C30.8661 8.02164 30.7198 8.0122 30.576 7.98631C30.2113 7.90072 30.0237 7.66036 30.0589 7.28281C30.0917 6.93106 30.3074 6.70828 30.6615 6.70711C32.0826 6.70711 33.5096 6.63911 34.9224 6.74463C36.6507 6.87243 38.0061 8.42952 38.0472 10.2621C38.0917 12.2683 38.0636 14.2756 38.0565 16.283C38.0542 17.4836 36.9626 18.7968 35.0831 18.2973Z" />
+                    <path d="M9.94432 18.28C9.22792 18.4946 8.59828 18.4735 8.0132 18.1112C7.68757 17.9219 7.41887 17.6486 7.23526 17.3197C7.05165 16.9909 6.95992 16.6187 6.96967 16.2422C6.95795 14.2642 6.93919 12.2862 6.96967 10.3093C7.00719 8.24221 8.5549 6.73319 10.6232 6.70154C11.8098 6.68278 12.9963 6.6945 14.1829 6.70154C14.6894 6.70154 14.9556 6.92431 14.9685 7.32883C14.9814 7.73334 14.6965 8.01122 14.1853 8.01591C13.0421 8.02412 11.9001 8.01591 10.7569 8.01591C9.24433 8.02412 8.28639 8.97854 8.28053 10.4887C8.28053 12.3495 8.26646 14.2103 8.29343 16.0698C8.29343 16.3501 8.41068 16.7159 8.60532 16.88C8.79995 17.0442 9.17984 17.0665 9.44483 17.0043C9.80361 16.9211 9.93963 16.5858 9.93963 16.2129C9.93963 14.6449 9.93963 13.0772 9.93963 11.51C9.93963 11.3927 9.93963 11.2755 9.93963 11.1582C9.95839 10.6892 10.2234 10.4008 10.6244 10.4137C11.0031 10.4266 11.254 10.708 11.2552 11.1606C11.2552 13.1976 11.2552 15.2339 11.2552 17.2693C11.2552 17.899 11.2552 18.5298 11.2552 19.1594C11.2552 19.612 11.0043 19.8934 10.6244 19.9063C10.2234 19.9204 9.95487 19.6331 9.93963 19.1617C9.93728 18.8874 9.94432 18.6107 9.94432 18.28Z" />
+                    <path d="M22.5197 0.000386903C22.8549 -0.00548888 23.1879 0.0556131 23.4992 0.180113C23.8104 0.304612 24.0937 0.490001 24.3324 0.725413C24.5711 0.960824 24.7604 1.24152 24.8892 1.55104C25.0179 1.86056 25.0836 2.19268 25.0824 2.52792C25.0811 2.86316 25.013 3.19478 24.8819 3.50333C24.7508 3.81189 24.5594 4.09116 24.319 4.32479C24.0786 4.55842 23.7939 4.74169 23.4817 4.86387C23.1695 4.98605 22.8361 5.04467 22.501 5.03629C21.8338 5.0277 21.1967 4.75748 20.7267 4.28382C20.2568 3.81015 19.9916 3.17091 19.9883 2.50368C19.9926 1.83622 20.2616 1.19776 20.7362 0.728433C21.2108 0.259105 21.8523 -0.00273317 22.5197 0.000386903ZM23.7063 2.57169C23.7164 2.25956 23.604 1.95586 23.3933 1.72537C23.1826 1.49488 22.8902 1.35586 22.5784 1.33796C22.2666 1.32006 21.9602 1.4247 21.7245 1.62956C21.4888 1.83442 21.3425 2.12328 21.3167 2.4345C21.3036 2.5937 21.3224 2.75392 21.3721 2.90573C21.4218 3.05753 21.5014 3.19785 21.6062 3.31842C21.711 3.43899 21.8389 3.53736 21.9823 3.60775C22.1257 3.67814 22.2817 3.71912 22.4412 3.72828C22.6007 3.73743 22.7603 3.71458 22.9109 3.66106C23.0614 3.60754 23.1996 3.52445 23.3175 3.41666C23.4354 3.30888 23.5306 3.17859 23.5973 3.03348C23.6641 2.88836 23.7011 2.73135 23.7063 2.57169Z" />
+                    <path d="M31.4334 5.76598C30.9359 5.76551 30.4498 5.61748 30.0365 5.3406C29.6233 5.06373 29.3014 4.67047 29.1118 4.21061C28.9221 3.75074 28.8731 3.24495 28.9711 2.75724C29.069 2.26953 29.3094 1.82184 29.6619 1.47084C30.0144 1.11983 30.4631 0.881298 30.9512 0.78542C31.4393 0.689541 31.9449 0.740631 32.404 0.932226C32.863 1.12382 33.2549 1.4473 33.5301 1.86173C33.8052 2.27616 33.9512 2.7629 33.9496 3.26034C33.9502 3.59045 33.8855 3.91742 33.7591 4.22239C33.6327 4.52736 33.4472 4.80429 33.2133 5.03723C32.9794 5.27016 32.7017 5.45448 32.3962 5.57956C32.0907 5.70463 31.7635 5.76799 31.4334 5.76598ZM32.6293 3.24158C32.6196 2.93195 32.4898 2.63825 32.2673 2.42267C32.0449 2.20708 31.7473 2.08653 31.4375 2.08653C31.1277 2.08653 30.8301 2.20708 30.6076 2.42267C30.3852 2.63825 30.2553 2.93195 30.2456 3.24158C30.2406 3.40124 30.2677 3.56028 30.3254 3.70926C30.383 3.85823 30.47 3.99411 30.5812 4.10882C30.6924 4.22353 30.8254 4.31474 30.9725 4.37702C31.1196 4.43931 31.2777 4.4714 31.4375 4.4714C31.5972 4.4714 31.7553 4.43931 31.9024 4.37702C32.0495 4.31474 32.1826 4.22353 32.2938 4.10882C32.4049 3.99411 32.4919 3.85823 32.5496 3.70926C32.6072 3.56028 32.6343 3.40124 32.6293 3.24158Z" />
+                    <path d="M13.6009 5.76555C13.1038 5.76833 12.6171 5.6236 12.2023 5.34967C11.7875 5.07573 11.4632 4.6849 11.2706 4.22664C11.0779 3.76838 11.0255 3.26327 11.12 2.77523C11.2145 2.28719 11.4517 1.83814 11.8015 1.48492C12.1513 1.13169 12.598 0.890149 13.085 0.790863C13.5721 0.691576 14.0777 0.739003 14.5379 0.927142C14.998 1.11528 15.392 1.43568 15.67 1.84779C15.948 2.25991 16.0975 2.74522 16.0996 3.24232C16.1033 3.57264 16.0414 3.90041 15.9174 4.20661C15.7935 4.51282 15.61 4.79136 15.3775 5.02609C15.1451 5.26082 14.8684 5.44705 14.5634 5.57399C14.2584 5.70092 13.9313 5.76604 13.6009 5.76555ZM13.581 4.44531C13.7382 4.44672 13.8941 4.41677 14.0395 4.3572C14.185 4.29763 14.3171 4.20963 14.4282 4.09837C14.5392 3.98711 14.6269 3.85482 14.6862 3.70924C14.7455 3.56366 14.7752 3.40771 14.7735 3.25053C14.7652 2.9408 14.6367 2.64643 14.4152 2.42978C14.1937 2.21313 13.8966 2.09121 13.5867 2.08984C13.2769 2.08847 12.9787 2.20775 12.7552 2.42243C12.5318 2.63711 12.4007 2.93033 12.3897 3.23998C12.3853 3.39808 12.4129 3.55546 12.4709 3.70262C12.5288 3.84979 12.616 3.9837 12.727 4.09631C12.8381 4.20892 12.9708 4.29789 13.1172 4.35787C13.2635 4.41784 13.4205 4.44759 13.5787 4.44531H13.581Z" />
+                    <path d="M29.1159 21.8415C29.1159 22.6751 29.1159 23.5099 29.1159 24.3436C29.1159 24.8349 28.8732 25.1069 28.4664 25.1081C28.0595 25.1092 27.8039 24.8302 27.8016 24.3495C27.7953 22.6822 27.7953 21.0145 27.8016 19.3464C27.8016 18.8774 28.0877 18.5854 28.4804 18.596C28.8732 18.6065 29.1101 18.8938 29.1136 19.3394C29.1206 20.1742 29.1159 21.0078 29.1159 21.8415Z" />
+                    <path d="M15.9083 21.8496C15.9083 21.0289 15.9083 20.2081 15.9083 19.3874C15.9083 18.9008 16.1428 18.6088 16.5345 18.5924C16.9401 18.576 17.2215 18.882 17.2227 19.3792C17.229 21.0324 17.229 22.6856 17.2227 24.3389C17.2227 24.8219 16.9648 25.1022 16.5649 25.1057C16.1651 25.1092 15.9119 24.836 15.9083 24.3471C15.9036 23.5146 15.9083 22.6833 15.9083 21.8496Z" />
+                    <path d="M30.7794 18.6382C30.7794 17.8914 30.7794 17.1433 30.7794 16.3964C30.7794 15.9216 31.0421 15.6202 31.4313 15.6155C31.8206 15.6108 32.0926 15.911 32.0938 16.3835C32.1001 17.9078 32.1001 19.432 32.0938 20.9563C32.0938 21.4323 31.8335 21.7325 31.4442 21.7372C31.055 21.7419 30.7841 21.4405 30.7794 20.9692C30.7747 20.193 30.7794 19.4109 30.7794 18.6382Z" />
+                    <path d="M14.2464 18.6962C14.2464 19.4266 14.2464 20.1571 14.2464 20.8876C14.2464 21.4269 13.9908 21.7435 13.5769 21.7353C13.163 21.7271 12.9309 21.4246 12.9297 20.9146C12.9297 19.4247 12.9297 17.9344 12.9297 16.4438C12.9297 15.9302 13.1736 15.623 13.5746 15.623C13.9756 15.623 14.2441 15.9314 14.2464 16.4684C14.2488 17.2059 14.2464 17.9516 14.2464 18.6962Z" />
+                </g>
+                <defs>
+                    <clipPath id="clip0_237_2887">
+                        <rect width="45.0242" height="40" fill="white" />
+                    </clipPath>
+                </defs>
+            </symbol>
+
+            <symbol id="election-icon" viewBox="0 0 40 40">
+                <g clip-path="url(#clip0_237_2907)">
+                    <path d="M29.9991 40.0004C29.8355 39.9296 29.6658 39.8682 29.5074 39.7859C28.7939 39.414 28.373 38.8327 28.3501 38.015C28.3251 37.1567 28.3147 36.2952 28.3574 35.439C28.3793 35.0129 28.5345 34.5932 28.6574 34.0432C28.1637 32.9504 28.1668 30.2182 28.7303 29.1629C28.1553 28.0807 28.1574 25.1609 28.7303 24.1713C28.1585 23.1129 28.1564 20.1796 28.747 19.1442C28.3564 18.7067 28.3303 18.1473 28.3303 17.5817C28.3303 16.8525 28.3199 16.1234 28.3376 15.3942C28.3658 14.2119 29.2147 13.3484 30.397 13.3411C32.897 13.3244 35.397 13.3286 37.897 13.3411C38.8835 13.3411 39.5918 13.8879 39.9126 14.8307C39.9361 14.8881 39.9635 14.9438 39.9949 14.9973V18.2786C39.8793 18.5359 39.7595 18.7911 39.6522 19.0515C39.626 19.1181 39.6234 19.1916 39.6449 19.2598C39.7491 19.5338 39.8772 19.8025 39.9949 20.0723V23.2817C39.8814 23.5359 39.7626 23.7869 39.6595 24.0452C39.6314 24.1226 39.6314 24.2074 39.6595 24.2848C39.7637 24.5275 39.8835 24.7629 39.997 25.0004V28.2817C39.8814 28.539 39.7616 28.7942 39.6533 29.0546C39.6274 29.1213 39.6252 29.1948 39.647 29.2629C39.7512 29.5369 39.8793 29.8057 39.997 30.0754V33.2817C39.8814 33.54 39.7605 33.7952 39.6533 34.0567C39.6294 34.1241 39.6294 34.1976 39.6533 34.265C39.7574 34.5379 39.8835 34.8057 40.0012 35.0754V38.2817C39.7546 39.1803 39.1817 39.7532 38.2824 40.0004H29.9991ZM34.1658 20.0004H30.6241C30.1105 20.0004 30.0147 20.0869 30.0053 20.615C29.9939 21.2911 30.0053 21.9692 30.0053 22.6442C30.0053 23.2411 30.1095 23.34 30.7126 23.34C33.0286 23.34 35.3442 23.34 37.6595 23.34C38.2293 23.34 38.3262 23.2671 38.3428 22.6984C38.3637 22.0098 38.3522 21.3202 38.3428 20.6307C38.3428 20.1161 38.2158 20.0057 37.6866 20.0057L34.1658 20.0004ZM34.1585 25.0004H30.6074C30.1105 25.0004 30.0064 25.089 29.997 25.5838C29.9845 26.2723 29.997 26.9619 29.997 27.6515C29.997 28.2317 30.1012 28.34 30.672 28.34C33.0012 28.34 35.33 28.34 37.6585 28.34C38.221 28.34 38.3178 28.264 38.3345 27.6911C38.3543 27.0025 38.3428 26.3129 38.3345 25.6234C38.3345 25.1244 38.2043 24.9984 37.7095 24.9984C36.5276 24.9997 35.3463 25.0004 34.1658 25.0004H34.1585ZM34.1335 30.0004C32.9487 30.0004 31.7647 30.0004 30.5814 30.0004C30.1137 30.0004 30.0074 30.0911 29.998 30.5692C29.9845 31.2577 29.9918 31.9473 29.998 32.6369C29.998 33.239 30.1022 33.339 30.7001 33.339C33.0161 33.339 35.3317 33.339 37.647 33.339C38.2303 33.339 38.323 33.265 38.3376 32.665C38.3564 31.9754 38.346 31.2859 38.3376 30.5963C38.3376 30.1265 38.2012 30.0004 37.7272 30.0004C36.5335 30.0004 35.3373 30.0004 34.1387 30.0004H34.1335ZM34.173 15.0004C32.9637 15.0004 31.7543 15.0004 30.5449 15.0004C30.2251 15.0004 30.0012 15.1046 29.997 15.4577C29.9897 16.2504 29.997 17.0442 29.997 17.8369C29.997 18.1817 30.1689 18.3525 30.5345 18.3463C31.2762 18.3327 32.0168 18.3463 32.7585 18.3463C34.4105 18.3463 36.0626 18.3463 37.7137 18.3463C38.0345 18.3463 38.3137 18.2734 38.321 17.9015C38.3376 17.0963 38.3272 16.289 38.3137 15.4838C38.3085 15.1369 38.1241 14.9932 37.7595 14.9984C36.572 15.0109 35.3751 15.0004 34.1782 15.0004H34.173ZM34.2157 35.0004C32.9928 35.0004 31.7699 35.0004 30.548 35.0004C30.1397 35.0004 29.9991 35.1348 29.996 35.5296C29.9887 36.2588 29.9845 36.9879 29.996 37.7171C30.0043 38.2536 30.1074 38.3421 30.6522 38.3421C32.9807 38.3421 35.3071 38.3421 37.6314 38.3421C37.7095 38.3421 37.7876 38.3421 37.8647 38.3421C38.1376 38.3234 38.3168 38.1807 38.3199 37.9057C38.3289 37.0994 38.3265 36.2932 38.3126 35.4869C38.3064 35.1432 38.1272 34.9932 37.7605 34.9994C36.5876 35.0119 35.4043 35.0004 34.221 35.0004H34.2157Z" />
+                    <path d="M15.8586 39.9999C15.6302 39.9126 15.4069 39.8125 15.1898 39.6999C14.5753 39.3384 14.2096 38.7863 14.1825 38.079C14.1471 37.1415 14.1523 36.204 14.1992 35.2665C14.2169 34.8926 14.3898 34.5259 14.5117 34.0738C14.1659 33.6499 14.1596 33.0322 14.1534 32.4207C14.1534 31.7822 14.1055 31.1395 14.1721 30.5082C14.2211 30.0457 14.52 29.5988 14.5211 29.1436C14.5221 28.6884 14.1982 28.2634 14.1742 27.8155C14.1348 26.9186 14.1491 26.0201 14.2169 25.1249C14.2378 24.8124 14.5294 24.4999 14.5294 24.1874C14.5294 23.8749 14.243 23.5686 14.2242 23.2499C14.1576 22.2635 14.143 21.2743 14.1805 20.2863C14.2378 19.1311 15.1086 18.3447 16.2638 18.3395C18.7499 18.327 21.2364 18.327 23.7232 18.3395C24.8826 18.3395 25.7503 19.1238 25.8128 20.2811C25.8525 21.2561 25.8396 22.2325 25.7742 23.2061C25.7555 23.5478 25.4763 23.8822 25.4784 24.2186C25.4805 24.5551 25.7909 24.8686 25.7909 25.1978C25.8242 26.2499 25.8846 27.3186 25.7284 28.3499C25.6419 28.8846 25.6419 29.4297 25.7284 29.9645C25.8867 30.9957 25.8253 32.0655 25.794 33.1165C25.7836 33.4759 25.5857 33.829 25.4586 34.2363C25.794 34.6322 25.819 35.1822 25.8305 35.7311C25.8419 36.2801 25.8357 36.8509 25.8305 37.4103C25.8253 38.927 25.5023 39.4165 24.1294 39.9947L15.8586 39.9999ZM19.9763 24.9999H16.4648C15.9305 24.9999 15.8565 25.054 15.8398 25.603C15.8211 26.3176 15.8305 27.0332 15.8398 27.7478C15.8398 28.2197 15.968 28.3384 16.4523 28.3384C18.819 28.3384 21.1857 28.3384 23.5523 28.3384C24.0492 28.3384 24.1419 28.2624 24.1555 27.7478C24.1742 27.0467 24.1648 26.3436 24.1607 25.6415C24.1607 25.0947 24.0628 25.0009 23.5273 24.9999H19.9763ZM20.0013 29.9999C18.8055 29.9999 17.6093 29.9999 16.4128 29.9999C15.9492 29.9999 15.8586 30.0676 15.8461 30.5374C15.8273 31.278 15.8336 32.0186 15.8398 32.7603C15.8398 33.2113 15.969 33.3363 16.4253 33.3374C18.8211 33.3374 21.2107 33.3374 23.6044 33.3426C23.9867 33.3426 24.1555 33.1832 24.1555 32.8113C24.1555 32.0707 24.1638 31.329 24.1555 30.5884C24.1555 30.1072 24.0388 29.9999 23.5492 29.9999C22.368 29.9999 21.1846 29.9999 19.9992 29.9999H20.0013ZM20.0409 19.9999C18.819 19.9999 17.5961 19.9999 16.3742 19.9999C16.0492 19.9999 15.8419 20.1176 15.8409 20.4686C15.8409 21.2478 15.8284 22.0311 15.8482 22.8082C15.8596 23.2592 15.9659 23.3395 16.4273 23.3405C17.5586 23.3405 18.6898 23.3405 19.8211 23.3405C21.0711 23.3405 22.3211 23.3405 23.5711 23.3405C23.8836 23.3405 24.1576 23.2707 24.1607 22.8853C24.1669 22.0926 24.1607 21.2999 24.1607 20.5061C24.1607 20.129 23.9773 19.9853 23.5982 19.9936C22.4075 20.0103 21.2242 19.9999 20.0409 19.9999ZM19.9794 38.3395H23.569C23.8471 38.3395 24.1357 38.2988 24.144 37.9592C24.1648 37.103 24.1513 36.2447 24.1378 35.3874C24.1378 35.1249 23.9773 34.9978 23.7044 34.9988C21.2468 34.9988 18.7891 34.9988 16.3315 34.9988C16.019 34.9988 15.8419 35.1457 15.8398 35.4686C15.8398 36.2217 15.8242 36.977 15.8398 37.7301C15.8534 38.2759 15.944 38.3374 16.5044 38.3384C17.6641 38.3405 18.8225 38.3408 19.9794 38.3395Z" />
+                    <path d="M0 30C0.272917 29.1386 0.795833 28.5292 1.77083 28.3261C0.409375 26.8844 -0.162498 25.2104 0.112502 23.2917C0.320835 21.8031 1.05 20.5833 2.21875 19.624C4.44271 17.8031 7.73333 17.9573 9.82292 19.9365C11.9125 21.9156 12.4792 25.5833 9.93542 28.3104L10.2479 28.4208C10.6487 28.5471 10.9997 28.796 11.2514 29.1324C11.5032 29.4688 11.643 29.8757 11.651 30.2958C11.6719 31.1146 11.6906 31.9375 11.651 32.7542C11.625 33.2323 11.475 33.7031 11.3563 34.3C11.6344 34.6188 11.6688 35.1625 11.6688 35.7146C11.6688 36.4302 11.675 37.1458 11.6688 37.8615C11.6542 38.8948 11.1323 39.5886 10.1385 39.924C10.0898 39.9444 10.0434 39.9699 10 40H1.71875C0.815972 39.7542 0.243056 39.1813 0 38.2813V35.0781C0.111458 34.8188 0.228123 34.5573 0.330207 34.2979C0.361568 34.2203 0.36525 34.1342 0.340627 34.0542C0.23646 33.7917 0.115625 33.5386 0 33.2813V30ZM5.86875 20C3.56875 19.9813 1.66563 21.8542 1.6625 24.1375C1.66163 25.2436 2.09785 26.3051 2.87613 27.091C3.65441 27.8769 4.7117 28.3235 5.81771 28.3333C8.06562 28.3698 9.98437 26.4792 9.99791 24.2063C10.0031 23.6589 9.90046 23.1159 9.69575 22.6082C9.49103 22.1006 9.1883 21.6382 8.80484 21.2476C8.42138 20.857 7.96471 20.5458 7.46092 20.3317C6.95714 20.1176 6.41611 20.0049 5.86875 20ZM5.84583 30C4.63646 30 3.42709 30 2.21667 30C1.86667 30 1.66563 30.1406 1.6625 30.4969C1.65521 31.2386 1.64271 31.9802 1.6625 32.7208C1.67813 33.2656 1.78125 33.3458 2.325 33.3458C4.65278 33.3458 6.98125 33.3458 9.31042 33.3458C9.40157 33.348 9.49276 33.3438 9.58333 33.3333C9.83437 33.2979 10 33.1615 10 32.8979C10 32.0917 10 31.2854 9.99479 30.4792C9.99479 30.1271 9.8 29.9896 9.43958 29.9938C8.23958 30.0104 7.04271 30 5.84583 30ZM5.85833 35C4.64896 35 3.43958 35 2.23021 35C1.88541 35 1.66771 35.124 1.66354 35.4844C1.65416 36.2386 1.64271 36.9938 1.66354 37.7469C1.67916 38.2677 1.78542 38.3417 2.31146 38.3427C3.98924 38.3427 5.66701 38.3427 7.34479 38.3427H9.45208C9.76458 38.3427 9.99271 38.2271 9.99479 37.875C9.99479 37.0938 10.0063 36.3125 9.98959 35.5333C9.98021 35.0948 9.8625 35.0042 9.40625 35.0031L5.85833 35Z" />
+                    <path d="M34.3732 0C34.9492 0.270833 35.1024 0.596876 34.9461 1.22188C34.6246 2.49479 34.301 3.76666 33.9753 5.0375C33.8847 5.39166 33.6815 5.64687 33.3013 5.71146C32.9649 5.76771 32.6367 5.68854 32.4909 5.38125C32.3804 5.12562 32.3443 4.84399 32.3867 4.56875C32.4576 4.08854 32.6086 3.61979 32.7524 3.04271L30.1482 5.12604L22.4982 11.2615C21.8159 11.8094 21.6076 11.8146 20.8836 11.2979L15.8722 7.71771C15.0027 8.4441 14.1347 9.1684 13.268 9.89063C11.0881 11.7066 8.90827 13.5208 6.72841 15.3333C6.60862 15.4375 6.48466 15.5292 6.35862 15.6208C5.93049 15.9333 5.44612 15.8917 5.14404 15.525C4.84195 15.1583 4.89924 14.6677 5.30966 14.3198C5.97528 13.7552 6.64716 13.2 7.31799 12.6427C9.90758 10.4858 12.4972 8.32847 15.0867 6.17083C15.6357 5.71458 15.9201 5.70625 16.5086 6.12708C18.2159 7.33854 19.9222 8.55208 21.6649 9.79167C24.9763 7.15104 28.2867 4.50937 31.6649 1.81562C31.0753 1.81562 30.5659 1.82292 30.0576 1.81562C29.4888 1.80521 29.1274 1.38021 29.2159 0.840626C29.2805 0.442709 29.6149 0.178124 30.0888 0.158332C30.8815 0.124999 31.6753 0.0999995 32.469 0.0645828C32.6357 0.0572912 32.8013 0.0239572 32.968 0.00208219L34.3732 0Z" />
+                </g>
+                <defs>
+                    <clipPath id="clip0_237_2907">
+                        <rect width="40" height="40" fill="white" />
+                    </clipPath>
+                </defs>
+            </symbol>
+
+            <symbol id="location-icon-sm" viewBox="0 0 11 12">
+                <g clip-path="url(#clip0_1_217)">
+                    <path d="M4.7037 11.9999C4.52543 11.9849 4.34745 11.9691 4.16947 11.9547C3.33909 11.8891 2.52162 11.7551 1.73141 11.4838C1.26813 11.3249 0.824798 11.1267 0.453005 10.7965C0.265936 10.6303 0.120209 10.4347 0.0477858 10.1925C-0.085919 9.74714 0.0659647 9.37945 0.375597 9.06484C0.685229 8.75022 1.07931 8.55289 1.4898 8.39367C2.03312 8.18285 2.59639 8.04592 3.1702 7.94975C3.196 7.94535 3.22093 7.93685 3.25553 7.92805C3.23441 7.89052 3.21917 7.86003 3.20099 7.83159C2.79782 7.20118 2.38732 6.57576 1.99178 5.93978C1.48013 5.11527 1.29159 4.21657 1.464 3.26012C1.71147 1.88583 2.48027 0.885098 3.75839 0.335032C5.07549 -0.230868 6.3536 -0.0739993 7.52528 0.761069C8.33748 1.33958 8.84268 2.13682 9.04471 3.11087C9.25289 4.11571 9.08634 5.0663 8.54126 5.93978C8.14542 6.57488 7.73551 7.2006 7.33205 7.83188C7.31388 7.8612 7.29863 7.89052 7.27722 7.92864C7.51179 7.97643 7.73639 8.0166 7.95894 8.06909C8.59433 8.21775 9.218 8.4013 9.77363 8.75902C10.0797 8.95576 10.3442 9.19239 10.4709 9.55069C10.5976 9.909 10.5295 10.2348 10.3149 10.5356C10.1003 10.8364 9.79386 11.0367 9.4684 11.2021C8.80105 11.5407 8.08414 11.724 7.34935 11.8313C6.87552 11.9005 6.39612 11.9319 5.91936 11.9808C5.88095 11.9846 5.84312 11.9934 5.80501 11.9999H4.7037ZM5.26344 9.76298C5.29746 9.71225 5.32209 9.67794 5.34408 9.64247C6.18501 8.32477 7.02242 7.00356 7.86805 5.68997C8.53804 4.64848 8.62453 3.56271 8.0733 2.45935C7.56604 1.44601 6.71895 0.855777 5.5892 0.741718C4.39583 0.620914 3.43057 1.07539 2.71191 2.0339C1.95396 3.04461 1.90646 4.50861 2.58436 5.56828C3.18115 6.5007 3.77735 7.43321 4.37296 8.36582C4.66822 8.82558 4.96085 9.28621 5.26462 9.76298H5.26344ZM5.26168 11.3144C5.7015 11.285 6.14132 11.2672 6.58114 11.2264C7.34349 11.1578 8.09294 11.0129 8.80955 10.7303C9.13648 10.6013 9.45462 10.4532 9.69622 10.1829C9.87684 9.97937 9.8745 9.8052 9.69622 9.60171C9.52851 9.40995 9.31505 9.28093 9.08898 9.17274C8.39964 8.84112 7.65987 8.69246 6.90836 8.59277C6.87904 8.58895 6.83271 8.62209 6.81278 8.65141C6.72481 8.77984 6.64301 8.91295 6.55944 9.04431C6.23691 9.5504 5.91437 10.0567 5.59184 10.5632C5.50006 10.7098 5.37867 10.7875 5.20187 10.7596C5.0752 10.7394 4.99985 10.6535 4.93505 10.5514C4.53784 9.9259 4.14044 9.30117 3.74284 8.67721C3.7015 8.61212 3.66632 8.57605 3.57718 8.5957C3.41415 8.63206 3.24614 8.64525 3.08136 8.67545C2.46268 8.7898 1.85338 8.93934 1.30156 9.25367C1.12697 9.35534 0.96681 9.48 0.825383 9.62429C0.654147 9.79728 0.662944 9.98288 0.825383 10.1658C0.899941 10.2507 0.984179 10.3264 1.07637 10.3916C1.44465 10.6499 1.86248 10.8004 2.29086 10.922C3.26139 11.1997 4.25626 11.2906 5.26286 11.3144H5.26168Z" />
+                    <path d="M7.02215 3.89711C7.02267 4.24417 6.9203 4.58359 6.72799 4.8725C6.53567 5.1614 6.26203 5.38681 5.94165 5.52025C5.62127 5.6537 5.26853 5.68918 4.92799 5.62221C4.58745 5.55525 4.2744 5.38885 4.0284 5.14404C3.7824 4.89922 3.61449 4.58698 3.54588 4.24677C3.47727 3.90656 3.51104 3.55365 3.64293 3.23263C3.77482 2.9116 3.99891 2.63688 4.28687 2.44317C4.57484 2.24945 4.91377 2.14545 5.26083 2.14429C5.72649 2.14428 6.17321 2.32868 6.50327 2.65716C6.83334 2.98563 7.0199 3.43145 7.02215 3.89711ZM6.31844 3.89711C6.3186 3.75888 6.29152 3.62196 6.23876 3.49419C6.18601 3.36642 6.1086 3.2503 6.01096 3.15244C5.91333 3.05459 5.79737 2.97692 5.66972 2.92388C5.54207 2.87084 5.40522 2.84346 5.26698 2.8433C5.12875 2.84315 4.99184 2.87022 4.86407 2.92298C4.7363 2.97574 4.62017 3.05315 4.52232 3.15078C4.42446 3.24842 4.3468 3.36438 4.29375 3.49203C4.24071 3.61968 4.21333 3.75653 4.21318 3.89476C4.20907 4.47005 4.69522 4.9559 5.2705 4.95033C5.84578 4.94476 6.32108 4.47005 6.31932 3.89799L6.31844 3.89711Z" />
+                </g>
+                <defs>
+                    <clipPath id="clip0_1_217">
+                        <rect width="10.5339" height="12" fill="white" />
+                    </clipPath>
+                </defs>
+            </symbol>
+
+            <symbol id="clock-icon" viewBox="0 0 12 12">
+                <g clip-path="url(#clip0_1_220)">
+                    <path d="M6.37461 12H5.62461C5.54805 11.9903 5.47148 11.9797 5.39492 11.9713C4.20898 11.8409 3.14492 11.4087 2.22336 10.6522C1.07398 9.7075 0.356797 8.50156 0.0917969 7.03375C0.0524219 6.815 0.0292969 6.59469 -0.00195312 6.375V5.625C0.00651893 5.59538 0.0128885 5.5652 0.0171089 5.53469C0.0967964 4.51031 0.413046 3.56594 0.985859 2.71344C1.94836 1.28562 3.27555 0.400938 4.97555 0.0912504C5.18961 0.0521879 5.40648 0.02875 5.62211 0H6.37211C6.57617 0.026875 6.78148 0.0475002 6.9843 0.0821877C8.10742 0.273125 9.09992 0.743125 9.95305 1.49875C11.0018 2.42875 11.658 3.58437 11.9055 4.9675C11.9449 5.18625 11.968 5.405 11.9993 5.62594V6.37594C11.9924 6.40719 11.9843 6.43562 11.9793 6.46594C11.9312 6.77375 11.9027 7.08594 11.8327 7.38844C11.298 9.695 9.36023 11.5169 7.03211 11.9097C6.8143 11.9456 6.59336 11.9688 6.37461 12ZM11.2965 6C11.2965 3.08 8.91617 0.700625 5.99711 0.702812C3.07805 0.705 0.708672 3.07625 0.702734 5.99344C0.696796 8.91062 3.07773 11.2937 5.99617 11.2969C8.91461 11.3 11.2959 8.92 11.2965 6Z" />
+                    <path d="M5.6481 4.93361C5.6481 4.59768 5.6481 4.26205 5.6481 3.92611C5.6481 3.69861 5.79372 3.54018 5.99841 3.53955C6.2031 3.53893 6.35029 3.69768 6.3506 3.92455C6.3506 4.53361 6.3506 5.1433 6.35404 5.75205C6.35669 5.81524 6.3816 5.87545 6.42435 5.92205C7.05352 6.55768 7.68518 7.19059 8.31935 7.8208C8.41591 7.91737 8.4781 8.02518 8.45497 8.16455C8.44556 8.22362 8.42115 8.27928 8.38409 8.32622C8.34702 8.37316 8.29854 8.40981 8.24327 8.43266C8.188 8.45552 8.12779 8.46381 8.0684 8.45676C8.00901 8.4497 7.95242 8.42753 7.90404 8.39236C7.86994 8.3663 7.83806 8.33745 7.80872 8.30611C7.14435 7.64153 6.47883 6.97705 5.81216 6.31268C5.75757 6.26293 5.71449 6.20187 5.68594 6.13375C5.65739 6.06563 5.64405 5.99211 5.64685 5.9183C5.6531 5.58986 5.6481 5.26174 5.6481 4.93361Z" />
+                    <path d="M6.35124 2.13213C6.35124 2.24901 6.35405 2.36588 6.35124 2.48276C6.35091 2.5288 6.34151 2.57433 6.32359 2.61674C6.30567 2.65916 6.27956 2.69763 6.24677 2.72995C6.21398 2.76228 6.17515 2.78783 6.13248 2.80515C6.08982 2.82246 6.04416 2.83121 5.99811 2.83088C5.95207 2.83055 5.90654 2.82116 5.86413 2.80323C5.82171 2.78531 5.78324 2.75921 5.75092 2.72642C5.71859 2.69363 5.69304 2.65479 5.67572 2.61212C5.6584 2.56946 5.64966 2.5238 5.64999 2.47776C5.64686 2.24859 5.64686 2.0188 5.64999 1.78838C5.6528 1.58244 5.80624 1.42838 6.00311 1.42994C6.19999 1.43151 6.34686 1.58619 6.35155 1.79338C6.35311 1.90619 6.35155 2.01932 6.35124 2.13213Z" />
+                    <path d="M2.12539 6.35135C2.01226 6.35135 1.89945 6.35385 1.78633 6.35135C1.58164 6.34604 1.42789 6.19073 1.4307 5.9951C1.43235 5.90241 1.47054 5.81411 1.53697 5.74944C1.6034 5.68477 1.69268 5.64895 1.78539 5.64979C2.01883 5.64635 2.25258 5.64573 2.48633 5.64979C2.57746 5.65251 2.66396 5.69063 2.72746 5.75606C2.79097 5.82149 2.82648 5.90908 2.82648 6.00026C2.82648 6.09144 2.79097 6.17903 2.72746 6.24446C2.66396 6.30989 2.57746 6.34801 2.48633 6.35073C2.36664 6.35448 2.2457 6.35135 2.12539 6.35135Z" />
+                    <path d="M9.8794 5.64833C9.99221 5.64833 10.1053 5.64583 10.2181 5.64833C10.3111 5.64771 10.4006 5.68405 10.4668 5.74937C10.533 5.81468 10.5705 5.90362 10.5711 5.99661C10.5717 6.0896 10.5354 6.17903 10.4701 6.24523C10.4048 6.31142 10.3158 6.34896 10.2228 6.34958C9.98534 6.35416 9.74784 6.35416 9.51034 6.34958C9.41912 6.34611 9.33286 6.30721 9.26988 6.24114C9.20689 6.17507 9.17216 6.08704 9.17305 5.99577C9.17395 5.90449 9.2104 5.81716 9.27467 5.75234C9.33893 5.68752 9.42595 5.65032 9.51721 5.64864C9.63784 5.64583 9.75877 5.64833 9.8794 5.64833Z" />
+                    <path d="M5.64843 9.86909C5.64843 9.75221 5.64625 9.63534 5.64843 9.51846C5.64719 9.47152 5.65537 9.4248 5.67251 9.38107C5.68965 9.33735 5.71539 9.29751 5.7482 9.26392C5.78102 9.23032 5.82025 9.20366 5.86356 9.1855C5.90687 9.16734 5.95338 9.15806 6.00034 9.1582C6.0473 9.15835 6.09376 9.16792 6.13695 9.18635C6.18015 9.20478 6.21921 9.23169 6.25181 9.26549C6.28442 9.29928 6.30991 9.33928 6.32677 9.38311C6.34364 9.42694 6.35154 9.47371 6.35 9.52065C6.35333 9.74981 6.35333 9.97961 6.35 10.21C6.34718 10.4169 6.19375 10.5703 5.99843 10.57C5.80312 10.5697 5.6525 10.4138 5.64843 10.2078C5.64687 10.0938 5.64843 9.9819 5.64843 9.86909Z" />
+                    <path d="M9.33086 8.9826C9.33153 9.0285 9.323 9.07408 9.30577 9.11663C9.28854 9.15918 9.26296 9.19786 9.23054 9.23036C9.19812 9.26287 9.15952 9.28855 9.11701 9.3059C9.0745 9.32324 9.02895 9.33189 8.98305 9.33135C8.93702 9.33176 8.89137 9.32307 8.84872 9.30577C8.80607 9.28847 8.76727 9.26291 8.73454 9.23055C8.7018 9.1982 8.67579 9.15969 8.658 9.11724C8.6402 9.07479 8.63098 9.02925 8.63086 8.98322C8.63223 8.89043 8.66965 8.80182 8.73521 8.73614C8.80077 8.67046 8.88932 8.63288 8.98211 8.63135C9.02812 8.63135 9.07367 8.64045 9.11615 8.65813C9.15863 8.67581 9.19719 8.70173 9.2296 8.73438C9.26202 8.76703 9.28766 8.80577 9.30503 8.84837C9.32241 8.89097 9.33119 8.93659 9.33086 8.9826Z" />
+                    <path d="M2.66801 3.01447C2.66771 2.96853 2.67662 2.923 2.69421 2.88057C2.7118 2.83813 2.73772 2.79965 2.77044 2.7674C2.80315 2.73515 2.842 2.70979 2.88469 2.69281C2.92737 2.67582 2.97302 2.66757 3.01895 2.66853C3.06498 2.66841 3.11058 2.67741 3.15311 2.69503C3.19564 2.71264 3.23426 2.73852 3.26672 2.77115C3.29918 2.80379 3.32485 2.84254 3.34224 2.88517C3.35962 2.92779 3.36839 2.97344 3.36801 3.01947C3.36599 3.1123 3.32789 3.2007 3.26179 3.26592C3.1957 3.33114 3.1068 3.36805 3.01395 3.36884C2.96791 3.36848 2.9224 3.359 2.88004 3.34096C2.83769 3.32292 2.79932 3.29667 2.76716 3.26372C2.735 3.23078 2.70968 3.19179 2.69266 3.14901C2.67565 3.10623 2.66727 3.0605 2.66801 3.01447Z" />
+                    <path d="M8.97805 2.66806C9.02393 2.66702 9.06956 2.67513 9.11228 2.69192C9.15499 2.7087 9.19394 2.73383 9.22684 2.76583C9.25974 2.79783 9.28594 2.83606 9.30391 2.87829C9.32187 2.92052 9.33125 2.96591 9.33149 3.01181C9.33259 3.10456 9.29714 3.19402 9.23282 3.26086C9.1685 3.32769 9.08046 3.36654 8.98774 3.36899C8.89494 3.36786 8.80614 3.33108 8.7397 3.26628C8.67327 3.20147 8.6343 3.11361 8.63086 3.02087C8.63101 2.92831 8.66746 2.83951 8.73238 2.77354C8.7973 2.70757 8.88551 2.66969 8.97805 2.66806Z" />
+                    <path d="M2.66813 8.98818C2.6667 8.89528 2.70202 8.80556 2.76639 8.73855C2.83076 8.67155 2.91899 8.63267 3.01188 8.63037C3.10473 8.63111 3.19373 8.6676 3.26037 8.73226C3.327 8.79692 3.36616 8.88477 3.3697 8.97756C3.37028 9.07043 3.33416 9.15977 3.2692 9.22614C3.20423 9.29251 3.11568 9.33053 3.02282 9.33193C2.97686 9.33301 2.93116 9.32494 2.88835 9.30818C2.84555 9.29143 2.8065 9.26632 2.77349 9.23433C2.74049 9.20234 2.71417 9.1641 2.69608 9.12184C2.67799 9.07958 2.66849 9.03415 2.66813 8.98818Z" />
+                </g>
+                <defs>
+                    <clipPath id="clip0_1_220">
+                        <rect width="12" height="12" fill="white" />
+                    </clipPath>
+                </defs>
+            </symbol>
+
+            <symbol id="quote-icon" viewBox="0 0 78 60">
+                <g clip-path="url(#clip0_7_1293)">
+                    <path d="M31.1211 0C31.2101 0.100813 31.3111 0.190315 31.4219 0.266485C33.5537 1.3286 34.5854 3.09879 34.1971 5.03649C33.7669 7.18737 32.0957 8.50835 29.6555 8.56926C24.9827 8.65467 20.4654 10.2621 16.789 13.1477C13.1127 16.0333 10.478 20.0394 9.28495 24.5581C9.2012 24.8741 9.17073 25.2015 9.08317 25.7001H29.3776C32.5411 25.7001 34.2542 27.3904 34.258 30.5196C34.258 38.7501 34.258 46.9818 34.258 55.2148C34.258 58.2603 32.5144 59.9543 29.4461 59.9581C21.5507 59.9581 13.6514 59.8896 5.75217 60.0038C3.08736 60.0419 1.14206 59.2881 0 56.8213V27.1277C0.0913647 26.7661 0.209386 26.4044 0.270296 26.0352C2.08236 14.7135 8.24185 6.71151 18.7869 2.25367C21.4136 1.14206 24.3373 0.730922 27.1239 0.00381058L31.1211 0Z" />
+                    <path d="M73.9483 2.64032e-05C74.0373 0.100839 74.1383 0.190342 74.2491 0.266512C76.3809 1.32863 77.4126 3.09882 77.0243 5.0327C76.5941 7.18739 74.9229 8.50076 72.4827 8.56928C67.1455 8.63849 62.0315 10.7216 58.1651 14.4014C54.9175 17.4014 52.7095 21.3574 51.8609 25.6964H72.0373C75.4026 25.6964 77.07 27.3371 77.0738 30.6453C77.0738 38.7666 77.0738 46.9006 77.0738 55.0473C77.0738 58.2793 75.3873 59.9505 72.1249 59.9543H47.7228C44.4832 59.9543 42.8082 58.2679 42.8044 55.0245C42.8044 46.7483 42.8044 38.4722 42.8044 30.1923C42.8463 14.7783 53.8176 2.30699 69.1174 0.239861C69.3925 0.180241 69.6624 0.0987633 69.9245 -0.00378418L73.9483 2.64032e-05Z" />
+                </g>
+                <defs>
+                    <clipPath id="clip0_7_1293">
+                        <rect width="77.1042" height="60" fill="white" />
+                    </clipPath>
+                </defs>
+            </symbol>
+
+
+
+            <symbol id="mail-icon" viewBox="0 0 22 18" fill="none">
+                <path d="M1 4L9.16492 9.71544C9.82609 10.1783 10.1567 10.4097 10.5163 10.4993C10.8339 10.5785 11.1661 10.5785 11.4837 10.4993C11.8433 10.4097 12.1739 10.1783 12.8351 9.71544L21 4M5.8 17H16.2C17.8802 17 18.7202 17 19.362 16.673C19.9265 16.3854 20.3854 15.9265 20.673 15.362C21 14.7202 21 13.8802 21 12.2V5.8C21 4.11984 21 3.27976 20.673 2.63803C20.3854 2.07354 19.9265 1.6146 19.362 1.32698C18.7202 1 17.8802 1 16.2 1H5.8C4.11984 1 3.27976 1 2.63803 1.32698C2.07354 1.6146 1.6146 2.07354 1.32698 2.63803C1 3.27976 1 4.11984 1 5.8V12.2C1 13.8802 1 14.7202 1.32698 15.362C1.6146 15.9265 2.07354 16.3854 2.63803 16.673C3.27976 17 4.11984 17 5.8 17Z" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+            </symbol>
+
+            <symbol id="location-icon" viewBox="0 0 22 22" fill="none">
+                <path d="M19 11C19 15.4183 15.4183 19 11 19M19 11C19 6.58172 15.4183 3 11 3M19 11H21M11 19C6.58172 19 3 15.4183 3 11M11 19V21M3 11C3 6.58172 6.58172 3 11 3M3 11H1M11 3V1M14 11C14 12.6569 12.6569 14 11 14C9.34315 14 8 12.6569 8 11C8 9.34315 9.34315 8 11 8C12.6569 8 14 9.34315 14 11Z" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+            </symbol>
+
+            <symbol id="phone-icon" viewBox="0 0 24 24" fill="none">
+                <path d="M14.0497 6C15.0264 6.19057 15.924 6.66826 16.6277 7.37194C17.3314 8.07561 17.8091 8.97326 17.9997 9.95M14.0497 2C16.0789 2.22544 17.9713 3.13417 19.4159 4.57701C20.8606 6.01984 21.7717 7.91101 21.9997 9.94M10.2266 13.8631C9.02506 12.6615 8.07627 11.3028 7.38028 9.85323C7.32041 9.72854 7.29048 9.66619 7.26748 9.5873C7.18576 9.30695 7.24446 8.96269 7.41447 8.72526C7.46231 8.65845 7.51947 8.60129 7.63378 8.48698C7.98338 8.13737 8.15819 7.96257 8.27247 7.78679C8.70347 7.1239 8.70347 6.26932 8.27247 5.60643C8.15819 5.43065 7.98338 5.25585 7.63378 4.90624L7.43891 4.71137C6.90747 4.17993 6.64174 3.91421 6.35636 3.76987C5.7888 3.4828 5.11854 3.4828 4.55098 3.76987C4.2656 3.91421 3.99987 4.17993 3.46843 4.71137L3.3108 4.86901C2.78117 5.39863 2.51636 5.66344 2.31411 6.02348C2.08969 6.42298 1.92833 7.04347 1.9297 7.5017C1.93092 7.91464 2.01103 8.19687 2.17124 8.76131C3.03221 11.7947 4.65668 14.6571 7.04466 17.045C9.43264 19.433 12.295 21.0575 15.3284 21.9185C15.8928 22.0787 16.1751 22.1588 16.588 22.16C17.0462 22.1614 17.6667 22 18.0662 21.7756C18.4263 21.5733 18.6911 21.3085 19.2207 20.7789L19.3783 20.6213C19.9098 20.0898 20.1755 19.8241 20.3198 19.5387C20.6069 18.9712 20.6069 18.3009 20.3198 17.7333C20.1755 17.448 19.9098 17.1822 19.3783 16.6508L19.1835 16.4559C18.8339 16.1063 18.6591 15.9315 18.4833 15.8172C17.8204 15.3862 16.9658 15.3862 16.3029 15.8172C16.1271 15.9315 15.9523 16.1063 15.6027 16.4559C15.4884 16.5702 15.4313 16.6274 15.3644 16.6752C15.127 16.8453 14.7828 16.904 14.5024 16.8222C14.4235 16.7992 14.3612 16.7693 14.2365 16.7094C12.7869 16.0134 11.4282 15.0646 10.2266 13.8631Z" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+            </symbol>
+
+            <symbol id="facebook-icon" viewBox="0 0 9 17">
+                <path d="M0.387939 8.43562V5.69697H2.18664C2.18664 5.50917 2.17882 5.34583 2.18664 5.18445C2.23555 4.31688 2.22186 3.43954 2.35586 2.58566C2.52507 1.51954 3.21071 0.820209 4.24357 0.510154C5.63833 0.0925091 7.07319 0.271499 8.51587 0.237266V2.97592H7.62581C7.44291 2.97592 7.26098 2.97592 7.07906 2.97592C6.01391 2.9945 5.81634 3.19599 5.80754 4.26994C5.80754 4.72377 5.80754 5.1776 5.80754 5.6823H8.54032C8.43273 6.62322 8.33199 7.50937 8.22929 8.42095H5.81341V16.5919H2.18958V8.43562H0.387939Z" />
+            </symbol>
+
+            <symbol id="twitter-icon" viewBox="0 0 19 15">
+                <path d="M9.7541 4.63616C9.46068 2.49414 10.5121 0.82845 12.5016 0.299303C13.7604 -0.0352045 14.8959 0.299304 15.8809 1.12286C16.0765 1.28815 16.2389 1.33902 16.4677 1.2549C17.1123 1.01918 17.7588 0.789328 18.4239 0.548717C18.1725 1.31358 17.6561 1.90337 16.9783 2.37775L17.0331 2.46969L18.8543 1.98064L18.9345 2.04715C18.4777 2.51957 18.0454 3.02524 17.5524 3.45462C17.4279 3.55055 17.3281 3.67496 17.2616 3.81741C17.195 3.95986 17.1636 4.11619 17.17 4.27329C17.1328 9.29285 13.6753 13.5065 8.70265 14.4973C6.07746 15.0205 3.55399 14.6107 1.20852 13.2727C1.14104 13.2336 1.07452 13.1925 1.01291 13.1475C0.996278 13.1358 0.98943 13.1084 0.957153 13.0497C2.91333 13.2248 4.66314 12.726 6.30438 11.5239C4.625 11.3439 3.48845 10.5517 2.85465 8.94856H4.3746C2.41842 8.05067 1.52249 6.89457 1.58215 5.29833L3.03658 5.69641L3.09526 5.59077C2.36854 5.02935 1.86678 4.31926 1.6653 3.43017C1.46381 2.54109 1.6027 1.67743 2.08098 0.818669C4.11933 3.14457 6.64377 4.43467 9.7541 4.63616Z" />
+            </symbol>
+
+            <symbol id="linkedin-icon" viewBox="0 0 17 15">
+                <path d="M16.1416 14.6754H12.5374V14.2685C12.5374 12.6674 12.5374 11.0672 12.5374 9.46608C12.5394 9.14098 12.5159 8.81623 12.4669 8.49483C12.3691 7.87864 12.0542 7.53435 11.57 7.4473C11.0203 7.34949 10.4139 7.56956 10.1753 8.08208C9.97009 8.51101 9.85239 8.97651 9.82903 9.45141C9.78795 11.0907 9.81338 12.7309 9.8124 14.3712C9.8124 14.4602 9.8036 14.5492 9.79675 14.6646H6.21988V4.72234H9.78991V6.00461C10.2173 5.68184 10.6047 5.25344 11.0878 5.05097C12.4239 4.48955 14.0945 4.50324 15.098 5.65641C15.7271 6.383 16.0849 7.30521 16.1103 8.26596C16.1827 10.3591 16.1661 12.4541 16.1847 14.5492C16.1761 14.593 16.1617 14.6355 16.1416 14.6754Z" />
+                <path d="M0.748047 14.6742V4.72021H4.32982V14.6742H0.748047Z" />
+                <path d="M4.35227 1.95705C4.35516 2.31491 4.25187 2.66559 4.05546 2.96475C3.85905 3.26391 3.57834 3.49811 3.24882 3.63773C2.91931 3.77736 2.55579 3.81613 2.20424 3.74916C1.85269 3.68219 1.52889 3.51247 1.27379 3.26148C1.0187 3.01048 0.843754 2.68948 0.77109 2.33906C0.698426 1.98864 0.731306 1.62454 0.865568 1.29281C0.99983 0.961075 1.22945 0.676603 1.52538 0.475366C1.82131 0.274128 2.17028 0.165163 2.52814 0.16225C2.76604 0.159278 3.00218 0.203458 3.22292 0.292239C3.44366 0.38102 3.64463 0.512643 3.81423 0.679512C3.98382 0.84638 4.11869 1.04519 4.21104 1.26446C4.30339 1.48373 4.35139 1.71912 4.35227 1.95705Z" />
+            </symbol>
+        </svg>
+        <!-- SVG ======================-->
+    </div>
+    <!-- pages -->
+    @*map*@
+
+    <!--Map Start-->
+    <div class="map" id="mapContainer"></div>
+    <div id="popup" class="popup"></div>
+    <!--Map End-->
+    @*@{
+            var endElection = Session["endElection"] as DateTime?;
+        }
+
+        <div class="custom-container">
+            <div class="custom-card">
+                <div class="custom-card-header">
+                    <h2 class="custom-card-title">العد التنازلي للانتخابات</h2>
+                </div>
+                <div class="custom-card-body">
+                    @if (endElection.HasValue)
+                    {
+                        <p class="custom-countdown-info">تاريخ انتهاء الانتخابات: <span class="custom-countdown-date">@endElection.Value.ToString("yyyy-MM-dd HH:mm:ss")</span></p>
+                        <div class="flip-counter" id="flip-counter">
+                            <div class="flip-card" id="days"></div>
+                            <div class="flip-card" id="hours"></div>
+                            <div class="flip-card" id="minutes"></div>
+                            <div class="flip-card" id="seconds"></div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="custom-alert">
+                            لا يوجد تاريخ لانتهاء الانتخابات متاح.
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+
+        <script>
+        function startCountdown(endDate) {
+            function updateCountdown() {
+                const now = new Date().getTime();
+                const distance = endDate - now;
+
+                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                updateFlipCard('days', days);
+                updateFlipCard('hours', hours);
+                updateFlipCard('minutes', minutes);
+                updateFlipCard('seconds', seconds);
+
+                if (distance < 0) {
+                    clearInterval(interval);
+                    document.querySelector('.flip-counter').innerHTML = "انتهت";
+                }
+            }
+
+            function updateFlipCard(id, value) {
+                const card = document.getElementById(id);
+                card.innerHTML = `
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front">${String(value).padStart(2, '0')}</div>
+                        <div class="flip-card-back">${String(value).padStart(2, '0')}</div>
+                    </div>
+                `;
+                card.classList.add('flip');
+                setTimeout(() => card.classList.remove('flip'), 600);
+            }
+
+            updateCountdown();
+            const interval = setInterval(updateCountdown, 1000);
+        }
+
+        const endElectionDate = new Date('@endElection.Value.ToString("yyyy-MM-ddTHH:mm:ss")').getTime();
+        startCountdown(endElectionDate);
+        </script>*@
+
+
+
+    <script src="~/assets/js/countdown.js"></script>
+    <script src="~/assets/maps/map.js"></script>
+
+
+    @*<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">*@
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>

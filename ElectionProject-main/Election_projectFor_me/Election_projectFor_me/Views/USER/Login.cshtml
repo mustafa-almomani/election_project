@@ -1,0 +1,109 @@
+﻿@model Election_projectFor_me.Models.User
+
+<head>
+
+    <style>
+        .btn:not(:disabled):not(.disabled) {
+            border: var(--bs-btn-border-width) solid #ff3b3b;
+            border-radius: var(--bs-btn-border-radius);
+            background-color: #ff3b3b;
+            color: white
+        }
+
+        
+        .btn:not(:disabled):not(.disabled) {
+            border: var(--bs-btn-border-width) solid #ff3b3b;
+            border-radius: var(--bs-btn-border-radius);
+            background-color: #ff3b3b;
+            color: white
+        }
+
+        #NationalNumberInput::placeholder {
+            color: #666666;
+            opacity: 0.5;
+        }
+
+        #EmailInput::placeholder {
+            color: #666666;
+            opacity: 0.5;
+        }
+
+        #PasswordInput::placeholder {
+            color: #666666;
+            opacity: 0.5;
+        }
+   
+
+        /*.container {
+            background-color: #edf2fa;
+        }*/
+    </style>
+</head>
+<section class="bg-light p-1 p-md-2 p-xl-3">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-12 col-xxl-10">
+                <div class="card border-light-subtle shadow-sm">
+                    <div class="row g-0">
+                        <div class="col-12 col-md-6">
+                            <img class="loginimg" src="~/assets/images/Jordan/img5.jpg" alt="Illustration" style="max-width: 100%; height: auto;">
+                        </div>
+                        <div class="col-12 col-md-6 d-flex align-items-center justify-content-center">
+                            <div class="col-12 col-lg-10 col-xl-9">
+                                <div class="card-body p-1 p-md-2 p-xl-3">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="mb-3">
+                                                <div class="text-center mb-2">
+                                                    <a href="#!">
+                                                        <img src="~/assets/images/Jordan/logo01-removebg-preview.png" alt="BootstrapBrain Logo" width="100px" height="100">
+                                                    </a>
+                                                </div>
+                                                <h2 class="text-center fs-4">مرحبا بك في انتخب</h2>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <form action="#!">
+                                        <div class="row gy-2">
+                                            <div class="col-12">
+                                                <div class="form-floating mb-2">
+                                                    @Html.TextBoxFor(m => m.NationalNumber, new { @class = "form-control", placeholder = "الرقم الوطني", id = "NationalNumberInput" })
+                                                    @Html.ValidationMessageFor(m => m.NationalNumber, "", new { @class = "text-danger" })
+                                                </div>
+                                            </div>
+                                            <div class="col-12">
+                                                <div class="form-floating mb-2">
+                                                    @Html.TextBoxFor(m => m.Email, new { @class = "form-control", placeholder = "البريد الإلكتروني", id = "EmailInput" })
+                                                    @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
+                                                </div>
+                                            </div>
+                                            <div class="col-12 mb-3">
+                                              
+                                                <div class="d-flex justify-content-center mt-2">
+                                                    <button type="submit" class="btn btn-register">تسجيل الدخول</button>
+                                                </div>
+                                                <div class="text-center mt-3">
+                                                    <p class="text-muted mb-0">
+                                                        هل لديك حساب ؟ @Html.ActionLink("تسجيل الدخول", "LoginUser", "USER", new { area = "" }, new { @class = "fw-bold text-body" })
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="d-flex gap-2 flex-column flex-md-row justify-content-md-center mt-4">
+                                                <!-- Additional content -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+

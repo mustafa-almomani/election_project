@@ -1,0 +1,179 @@
+﻿@model IEnumerable<Election_projectFor_me.Models.CandidateGroup>
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نتائج الانتخابات لكل حزب</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css">
+    <style>
+        body {
+            font-family: 'Open Sans', sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+        }
+
+        h2 {
+            font-size: 2.5rem;
+            color: #2c3e50;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        p#p {
+            font-size: 1.25rem;
+            color: #7f8c8d;
+            max-width: 800px;
+            margin: auto;
+        }
+
+        .column {
+            margin-bottom: 3rem;
+        }
+
+        .list-name {
+            font-size: 1.75rem;
+            color: #34495e;
+            background-color: #ecf0f1;
+            padding: 0.75rem 1rem;
+            margin-bottom: 0.5rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            font-weight: bold;
+            text-align: center;
+        }
+
+        table {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            border-radius: 0.5rem;
+            overflow: hidden;
+        }
+
+        .table thead {
+            background-color: #2980b9;
+            color: white;
+        }
+
+        .table tbody tr {
+            transition: all 0.3s ease;
+        }
+
+            .table tbody tr:hover {
+                background-color: #ecf0f1;
+            }
+
+        .rounded-circle {
+            width: 45px;
+            height: 45px;
+            border: 2px solid #2980b9;
+        }
+
+        .fw-bold {
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .badge {
+            padding: 0.5rem 0.75rem;
+            font-size: 0.9rem;
+            border-radius: 1rem;
+        }
+
+        .bg-success {
+            background-color: #27ae60 !important;
+        }
+
+        .bg-primary {
+            background-color: #2980b9 !important;
+        }
+
+        .bg-warning {
+            background-color: #f39c12 !important;
+        }
+
+        .text-light {
+            color: #ffffff !important;
+        }
+
+        .bg-danger {
+            background-color: #e74c3c !important;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2 class="text-center">نتائج الانتخابات لكل قائمة</h2>
+        <p id="p" class="text-center mb-4">
+            تعرض هذه الصفحة نتائج الانتخابات لكل حزب على حدة، حيث يمكنك الاطلاع على تفاصيل الأداء الانتخابي لكل حزب ومعرفة عدد الأصوات التي حصل عليها. توفر هذه المعلومات نظرة شاملة على توزيع الأصوات والتأثير الذي أحدثته الأحزاب في الانتخابات.
+        </p>
+
+        <br />
+        <br />
+
+        @foreach (var group in Model)
+        {
+            // Check if any candidate in this group matches the ElectionArea
+            if (group.Candidates.All(c => c.ElectionArea == ViewBag.id))
+            {
+                <div class="column">
+                    <div class="list-name">@group.ListName</div>
+                    <table class="table table-striped align-middle mb-0 bg-white">
+                        <thead class="bg-primary">
+                            <tr>
+                                <th>اسم المترشح</th>
+                                <th>عدد الاصوات</th>
+                                <th>نوع المترشح</th>
+                                <th>النتيجة</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var candidate in group.Candidates)
+                            {
+                                if (candidate.ElectionArea == ViewBag.id)
+                                {
+                                    <tr>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <img src="https://mdbootstrap.com/img/new/avatars/8.jpg" alt="" class="rounded-circle" />
+                                                <div class="ms-3">
+                                                    <p class="fw-bold mb-1">@candidate.CandidateName</p>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>@candidate.NumberOfVotesCandidate</td>
+                                        <td>
+                                            @if (candidate.typeofCandidates == "تنافس")
+                                            {
+                                                <span class="badge bg-success text-light">تنافس</span>
+                                            }
+                                            else if (candidate.typeofCandidates == "كوتا")
+                                            {
+                                                <span class="badge bg-primary text-light">كوتا</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge bg-warning text-dark">المقعد المسيحي</span>
+                                            }
+                                        </td>
+                                        <td>
+                                            <span class="badge @(candidate.Sucess ? "bg-success" : "bg-danger") text-light rounded-pill">
+                                                @(candidate.Sucess ? "ناجح" : "راسب")
+                                            </span>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        }
+
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.min.js"></script>
+</body>
+</html>

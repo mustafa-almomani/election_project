@@ -1,0 +1,30 @@
+﻿@{
+    ViewBag.Title = "Payment Success";
+}
+
+<style>
+    .centered-header {
+        text-align: center;
+        margin-top: 50px; /* Adjust the top margin as needed */
+    }
+</style>
+
+<h2 class="centered-header">تم الدفع بنجاح</h2>
+
+@section scripts {
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script type="text/javascript">
+        Swal.fire({
+            title: 'تم الدفع بنجاح!',
+            text: 'لقد تمت معالجة دفعتك بنجاح',
+            icon: 'success',
+            confirmButtonText: 'OK'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = '@Url.Action("Index", "Home")';
+            }
+        });
+    </script>
+
+
+}

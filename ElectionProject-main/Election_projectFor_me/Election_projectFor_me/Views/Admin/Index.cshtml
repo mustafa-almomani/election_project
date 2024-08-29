@@ -1,0 +1,89 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LayoutPage1.cshtml";
+}
+<div class="container mt-xl-70" style="margin-top: 70px;">
+    <form id="bulkActionForm" method="post" action="@Url.Action("BulkAction", "Admin")">
+        <table style="width: 100%; border-collapse: collapse; margin-bottom: 0;" class="table">
+            <thead style="background-color: #619460; color: #ffffff; text-align: left;">
+                <tr>
+                    <th style="padding: 10px; border: 1px solid #dee2e6;"><input type="checkbox" id="selectAll"></th>
+                    <th style="padding: 10px; border: 1px solid #dee2e6;">عنوان الاعلان</th>
+                    <th style="padding: 10px; border: 1px solid #dee2e6;">اسم المرشح</th>
+                    <th style="padding: 10px; border: 1px solid #dee2e6;">القائمة</th>
+                    <th style="padding: 10px; border: 1px solid #dee2e6;">محتوى الاعلان</th>
+                    <th style="padding: 10px; border: 1px solid #dee2e6;">رابط الاعلان</th>
+                    <th style="padding: 10px; border: 1px solid #dee2e6;">تعليق الادمن</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var ad in Model)
+                {
+                    <tr style="background-color: #ffffff;">
+                        <td style="padding: 10px; border: 1px solid #dee2e6;"><input type="checkbox" name="selectedIds" value="@ad.AdID" class="select-row"></td>
+                        <td style="padding: 10px; border: 1px solid #dee2e6;">@ad.Title</td>
+                        <td style="padding: 10px; border: 1px solid #dee2e6;">@ad.CandidateName</td>
+                        <td style="padding: 10px; border: 1px solid #dee2e6;">@ad.Type</td>
+                        <td style="padding: 10px; border: 1px solid #dee2e6;">@ad.Content</td>
+                        <td style="padding: 10px; border: 1px solid #dee2e6;">@ad.URLPath</td>
+                        <td style="padding: 10px; border: 1px solid #dee2e6;">
+                            <textarea name="adminComments[@ad.AdID]" style="width: 100%; margin-bottom: 10px; padding: 5px; border: 1px solid #ced4da;" placeholder="Admin comment (optional)"></textarea>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <input type="hidden" id="bulkActionType" name="action" value="">
+        <div style="margin-top: 15px;">
+            <button type="button" id="approveSelected" style="background-color: #28a745; border-color: #28a745; color: #ffffff; padding: 5px 10px; border: none; border-radius: 3px; cursor: pointer; width: 150px; margin-right: 10px;">Approve Selected</button>
+            <button type="button" id="rejectSelected" style="background-color: #dc3545; border-color: #dc3545; color: #ffffff; padding: 5px 10px; border: none; border-radius: 3px; cursor: pointer; width: 150px;">Reject Selected</button>
+        </div>
+    </form>
+</div>
+
+<style>
+    body {
+        direction: rtl;
+    }
+
+    /* Style for alternating row background color */
+    .table tbody tr:nth-of-type(odd) {
+        background-color: #f8f9fa; /* Light grey for odd rows */
+    }
+
+    /* Hover effect for table rows */
+    .table tbody tr:hover {
+        background-color: #e9ecef; /* Light grey on hover */
+    }
+    @@media (min-width: 1400px) {
+    .container, .container-sm, .container-md, .container-lg, .container-xl, .container-xxl {
+        max-width: 1318px;
+        /* padding-left: 30px; */
+        padding-right: 86%;
+    }
+</style>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const selectAllCheckbox = document.getElementById("selectAll");
+        const rowCheckboxes = document.querySelectorAll(".select-row");
+        const approveSelectedButton = document.getElementById("approveSelected");
+        const rejectSelectedButton = document.getElementById("rejectSelected");
+        const bulkActionForm = document.getElementById("bulkActionForm");
+        const bulkActionType = document.getElementById("bulkActionType");
+
+        selectAllCheckbox.addEventListener("change", function () {
+            rowCheckboxes.forEach(checkbox => checkbox.checked = selectAllCheckbox.checked);
+        });
+
+        approveSelectedButton.addEventListener("click", function () {
+            bulkActionType.value = "Approve";
+            bulkActionForm.submit();
+        });
+
+        rejectSelectedButton.addEventListener("click", function () {
+            bulkActionType.value = "Reject";
+            bulkActionForm.submit();
+        });
+    });
+</script>

@@ -1,0 +1,170 @@
+﻿@model List<Election_projectFor_me.Models.GeneralListCandidate>
+
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+<style>
+    section.h-100.bg-dark {
+        background-color: rgb(242 241 241) !important;
+    }
+
+    table {
+        width: 100%;
+        margin-bottom: 20px;
+        border-collapse: collapse;
+    }
+
+        table th, table td {
+            padding: 15px;
+            text-align: center;
+            border: 1px solid #dee2e6;
+        }
+
+        table th {
+            background-color: #f2f2f2;
+        }
+
+    .btn {
+        margin: 5px;
+    }
+</style>
+
+@using (Html.BeginForm("Create", "GeneralListCandidates", FormMethod.Post, new { id = "candidateForm" }))
+{
+    @Html.AntiForgeryToken()
+    <input type="hidden" name="listName" value="@ViewBag.ListName" />
+
+    <section class="h-100 bg-dark">
+        <div class="container py-5 h-100">
+            <div class="row d-flex justify-content-center align-items-center h-100">
+                <div class="col">
+                    <div class="card card-registration my-4">
+                        <div class="card-body p-md-5 text-black">
+                            <h3 class="mb-5 text-uppercase">نموذج تسجيل المرشح</h3>
+                            <div class="table-responsive">
+                                <table class="table table-bordered" id="candidates-table">
+                                    <thead>
+                                        <tr>
+                                            <th>الرقم الوطني</th>
+                                            <th>اسم المرشح</th>
+                                            <th>منطقة الانتخابات</th>
+                                            <th>المحافظة</th>
+                                            <th>الجنس</th>
+                                            <th>الإجراءات</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="candidates-container">
+                                        <!-- هنا سيتم إضافة نماذج المرشحين -->
+                                    </tbody>
+                                </table>
+                            </div>
+                            <button type="button" class="btn btn-secondary btn-lg" id="add-candidate">إضافة مرشح</button>
+                            <button type="submit" class="btn btn-primary btn-lg">إرسال</button>
+                            <p id="error-message" class="text-danger mt-3" style="display: none;">يجب إدخال 4 مرشحين على الأقل.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+}
+
+@section Scripts {
+    <script>
+        let candidateIndex = 0;
+
+        function createCandidateRow(index) {
+            return `
+                        <tr class="candidate-row" data-index="${index}">
+                            <td>
+                                <input type="text" name="[${index}].NationalNumber" class="form-control form-control-lg national-number" required onblur="fetchUserData(this)" />
+                            </td>
+                            <td>
+                                <input type="text" name="[${index}].CandidateName" class="form-control form-control-lg" readonly />
+                            </td>
+                            <td>
+                                <input type="text" name="[${index}].ElectionArea" class="form-control form-control-lg" readonly />
+                            </td>
+                            <td>
+                                <input type="text" name="[${index}].Governorate" class="form-control form-control-lg" readonly />
+                            </td>
+                            <td>
+                                <input type="text" name="[${index}].Gender" class="form-control form-control-lg" readonly />
+                            </td>
+                            <td>
+                                <button type="button" class="btn btn-danger btn-sm remove-candidate">حذف</button>
+                            </td>
+                        </tr>
+                    `;
+        }
+
+        function addCandidateRow() {
+            const container = document.getElementById('candidates-container');
+            const rowHtml = createCandidateRow(candidateIndex);
+            container.insertAdjacentHTML('beforeend', rowHtml);
+            candidateIndex++;
+        }
+
+        function removeCandidateRow(event) {
+            if (event.target.classList.contains('remove-candidate')) {
+                event.target.closest('.candidate-row').remove(); // حذف صف المرشح من الجدول
+            }
+        }
+
+        function fetchUserData(input) {
+            const index = input.closest('.candidate-row').getAttribute('data-index');
+            const nationalNumber = input.value;
+            if (nationalNumber) {
+                fetch(`/LocalListCandidates/GetUserData?nationalNumber=${nationalNumber}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data) {
+                            document.querySelector(`input[name='[${index}].CandidateName']`).value = data.FullName || '';
+                            document.querySelector(`input[name='[${index}].ElectionArea']`).value = data.ElectionArea || '';
+                            document.querySelector(`input[name='[${index}].Governorate']`).value = data.Governorate || '';
+                            document.querySelector(`input[name='[${index}].Gender']`).value = data.Gender || '';
+                        } else {
+                            document.querySelector(`input[name='[${index}].CandidateName']`).value = '';
+                            document.querySelector(`input[name='[${index}].ElectionArea']`).value = '';
+                            document.querySelector(`input[name='[${index}].Governorate']`).value = '';
+                            document.querySelector(`input[name='[${index}].Gender']`).value = '';
+                        }
+                    });
+            } else {
+                document.querySelector(`input[name='[${index}].CandidateName']`).value = '';
+                document.querySelector(`input[name='[${index}].ElectionArea']`).value = '';
+                document.querySelector(`input[name='[${index}].Governorate']`).value = '';
+                document.querySelector(`input[name='[${index}].Gender']`).value = '';
+            }
+        }
+
+        document.getElementById('add-candidate').addEventListener('click', addCandidateRow);
+        document.getElementById('candidates-container').addEventListener('click', removeCandidateRow);
+
+        document.getElementById('candidateForm').addEventListener('submit', function (event) {
+            const candidateCount = document.querySelectorAll('.candidate-row').length;
+            if (candidateCount < 4) {
+                event.preventDefault();
+                document.getElementById('error-message').style.display = 'block';
+            } else {
+               
+                event.preventDefault();
+                document.getElementById('error-message').style.display = 'none';
+                Swal.fire({
+                    icon: 'success',
+                    title: 'تم إرسال طلبك بنجاح',
+                    showConfirmButton: false, // إخفاء زر التأكيد
+                    timer: 1500 // مدة عرض الرسالة بالمللي ثانية (5 ثوانٍ)
+                }).then(() => {
+                    // تابع إرسال النموذج بعد إغلاق النافذة
+                    document.getElementById('candidateForm').submit();
+                });
+            }
+        });
+
+        // Adding initial candidate row
+        addCandidateRow();
+    </script>
+}

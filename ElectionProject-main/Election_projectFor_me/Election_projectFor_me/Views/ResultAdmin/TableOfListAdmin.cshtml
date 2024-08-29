@@ -1,0 +1,122 @@
+﻿@model IEnumerable<Election_projectFor_me.Models.GeneralListCandidate>
+
+@{
+    ViewBag.Title = "TableOfList";
+    Layout = "~/Views/Shared/_LayoutPage1.cshtml";
+}
+
+<head>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Open Sans', sans-serif;
+        }
+
+        h2 {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        p {
+            font-size: 18px;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .table-container {
+            padding: 20px;
+        }
+
+        .table {
+            width: 100%;
+            margin-bottom: 20px;
+            border: 1px solid #dee2e6;
+            border-collapse: collapse;
+        }
+
+            .table th,
+            .table td {
+                padding: 12px;
+                text-align: left;
+                border-bottom: 1px solid #dee2e6;
+            }
+
+            .table th {
+                background-color: #f8f9fa;
+                font-weight: bold;
+                text-align: center;
+            }
+
+            .table td {
+                vertical-align: middle;
+                text-align: center;
+            }
+
+            .table img {
+                width: 45px;
+                height: 45px;
+                border-radius: 50%;
+            }
+
+        .badge-success {
+            background-color: #28a745;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+        }
+
+        .badge-fail {
+            background-color: #dc3545;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="table-container">
+        <h2>نتائج الانتخابات لكل حزب</h2>
+        <p>
+            تعرض هذه الصفحة نتائج الانتخابات لكل حزب على حدة، حيث يمكنك الاطلاع على تفاصيل الأداء الانتخابي لكل حزب ومعرفة عدد الأصوات التي حصل عليها. توفر هذه المعلومات نظرة شاملة على توزيع الأصوات والتأثير الذي أحدثته الأحزاب في الانتخابات.
+        </p>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>اسم المترشح</th>
+                    <th>ناجح/راسب</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            <div class="d-flex align-items-center justify-content-center">
+                                <img src="https://mdbootstrap.com/img/new/avatars/8.jpg" alt="Candidate Avatar" />
+                                <div class="ms-3">
+                                    <p class="fw-bold mb-0">@item.CandidateName</p>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            @if (item.Sucess == "ناجح")
+                            {
+                                <span class="badge badge-success">ناجح</span>
+                            }
+                            else
+                            {
+                                <span class="badge badge-fail">راسب</span>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</body>

@@ -1,0 +1,239 @@
+﻿@model List<Election_projectFor_me.Models.LocalListCandidate>
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    section.h-100.bg-dark {
+        background-color: rgb(242 241 241) !important;
+    }
+
+    /* إضافة أنماط حسب الحاجة */
+
+</style>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+@using (Html.BeginForm("Create", "LocalListCandidates", FormMethod.Post, new { id = "candidateForm" }))
+{
+    @Html.AntiForgeryToken()
+
+    <input type="hidden" name="ListName" value="@TempData["ListName"]" />
+    <input type="hidden" name="ElectionArea" value="@TempData["ElectionArea"]" />
+    <input type="hidden" name="Governorate" value="@TempData["Governorate"]" />
+    <input type="hidden" name="Image" value="@TempData["Image"]" />
+    <input type="hidden" name="id" value="@TempData["id"]" />
+
+
+    <section class="h-100 bg-dark">
+        <div class="container py-5 h-100">
+            <div class="row d-flex justify-content-center align-items-center h-100">
+                <div class="col">
+                    <div class="card card-registration my-4">
+                        <div class="card-body p-md-5 text-black">
+                            <h3 class="mb-5 text-uppercase">نموذج تسجيل المرشح</h3>
+                            @if (!ViewData.ModelState.IsValid)
+                            {
+                                <div class="alert alert-danger">
+                                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                                </div>
+                            }
+                            <div class="table-responsive">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>الرقم الوطني</th>
+                                            <th>اسم المرشح</th>
+                                            <th>منطقة الانتخابات</th>
+                                            <th>المحافظة</th>
+                                            <th>الجنس</th>
+                                            <th>نوع الترشيح</th>
+                                            <th>صورة</th>
+                                            <th>إجراءات</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="candidates-container">
+                                        <!-- سيتم إضافة المرشحين هنا -->
+                                    </tbody>
+                                </table>
+                            </div>
+                            <button type="button" class="btn btn-secondary btn-lg" id="add-candidate">إضافة مرشح</button>
+                            <button type="submit" class="btn btn-primary btn-lg">إرسال</button>
+                            <p id="error-message" class="text-danger mt-3" style="display: none;"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+}
+
+@section Scripts {
+    <script>
+        let candidateIndex = 0;
+        let electionArea = "@TempData["ElectionArea"]";
+
+        function createCandidateRow(index) {
+            return `
+                <tr class="candidate-row" data-index="${index}">
+                    <td><input type="text" name="[${index}].NationalNumber" class="form-control national-number" required onblur="fetchUserData(this)" data-label="الرقم الوطني" /></td>
+                    <td><input type="text" name="[${index}].CandidateName" class="form-control" data-label="اسم المرشح"readonly /></td>
+                    <td><input type="text" name="[${index}].ElectionArea" class="form-control" data-label="منطقة الانتخابات" readonly /></td>
+                    <td><input type="text" name="[${index}].Governorate" class="form-control" data-label="المحافظة" readonly /></td>
+                    <td><input type="text" name="[${index}].Gender" class="form-control" data-label="الجنس" readonly /></td>
+                    <td>
+                        <select name="[${index}].TypeOfCandidates" class="form-control candidate-type" required data-label="نوع الترشيح">
+                            <option value="">اختر نوع الترشيح</option>
+                            <option value="كوتا">كوتا</option>
+                            <option value="تنافس">تنافس</option>
+                            <option value="مسيحي">مسيحي</option>
+                        </select>
+                    </td>
+                    <td><input type="file" name="[${index}].Image" class="form-control" required data-label="صورة" /></td>
+                    <td><button type="button" class="btn btn-danger btn-sm remove-candidate">حذف</button></td>
+                </tr>
+            `;
+        }
+
+        function addCandidateRow() {
+            const container = document.getElementById('candidates-container');
+            const rowHtml = createCandidateRow(candidateIndex);
+            container.insertAdjacentHTML('beforeend', rowHtml);
+            candidateIndex++;
+        }
+
+        function removeCandidateRow(event) {
+            if (event.target.classList.contains('remove-candidate')) {
+                const candidateRow = event.target.closest('.candidate-row');
+                candidateRow.remove();
+            }
+        }
+
+        function fetchUserData(input) {
+            const index = input.closest('.candidate-row').getAttribute('data-index');
+            const nationalNumber = input.value;
+            if (nationalNumber) {
+                fetch(`/LocalListCandidates/GetUserData?nationalNumber=${nationalNumber}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data) {
+                            document.querySelector(`input[name='[${index}].CandidateName']`).value = data.FullName || '';
+                            document.querySelector(`input[name='[${index}].ElectionArea']`).value = data.ElectionArea || '';
+                            document.querySelector(`input[name='[${index}].Governorate']`).value = data.Governorate || '';
+                            document.querySelector(`input[name='[${index}].Gender']`).value = data.Gender || '';
+
+                            if (data.ElectionArea !== electionArea) {
+                                Swal.fire({
+                                    //position: "top-end",
+                                    icon: "error",
+                                    title: "المرشح لا ينتمي إلى دائرة الانتخابات المحددة.",
+                                    showConfirmButton: false,
+                                    timer: 1500
+                                });
+
+                                input.value = '';
+                                document.querySelector(`input[name='[${index}].CandidateName']`).value = '';
+                                document.querySelector(`input[name='[${index}].ElectionArea']`).value = '';
+                                document.querySelector(`input[name='[${index}].Governorate']`).value = '';
+                                document.querySelector(`input[name='[${index}].Gender']`).value = '';
+                            }
+                        } else {
+                            document.querySelector(`input[name='[${index}].CandidateName']`).value = '';
+                            document.querySelector(`input[name='[${index}].ElectionArea']`).value = '';
+                            document.querySelector(`input[name='[${index}].Governorate']`).value = '';
+                            document.querySelector(`input[name='[${index}].Gender']`).value = '';
+                        }
+                    });
+            } else {
+                document.querySelector(`input[name='[${index}].CandidateName']`).value = '';
+                document.querySelector(`input[name='[${index}].ElectionArea']`).value = '';
+                document.querySelector(`input[name='[${index}].Governorate']`).value = '';
+                document.querySelector(`input[name='[${index}].Gender']`).value = '';
+            }
+        }
+
+        document.getElementById('add-candidate').addEventListener('click', addCandidateRow);
+        document.getElementById('candidates-container').addEventListener('click', removeCandidateRow);
+
+        document.getElementById('candidateForm').addEventListener('submit', function (event) {
+            let kotaCount = 0;
+            let christianCount = 0;
+            let competitiveCount = 0;
+
+            const candidates = document.querySelectorAll('.candidate-row');
+            candidates.forEach(candidate => {
+                const candidateType = candidate.querySelector('.candidate-type').value;
+
+                if (candidateType === "كوتا") {
+                    kotaCount++;
+                } else if (candidateType === "مسيحي") {
+                    christianCount++;
+                } else if (candidateType === "تنافس") {
+                    competitiveCount++;
+                }
+            });
+
+            let valid = true;
+            let errorMessage = "";
+
+            if (electionArea === "جرش") {
+                if (kotaCount !== 1) {
+                    errorMessage += "يجب أن يكون هناك مرشح واحد من نوع كوتا في جرش.<br>";
+                    valid = false;
+                }
+                if (competitiveCount < 3) {
+                    errorMessage += "يجب أن يكون هناك على الأقل 3 مرشحين من نوع تنافس في جرش.<br>";
+                    valid = false;
+                }
+                if (christianCount !== 0) {
+                    errorMessage += "لا يمكن وجود مرشح مسيحي في جرش.<br>";
+                    valid = false;
+                }
+            } else if (electionArea === "اربد") {
+                if (kotaCount !== 1) {
+                    errorMessage += "يجب أن يكون هناك مرشح واحد من نوع كوتا في اربد.<br>";
+                    valid = false;
+                }
+                if (competitiveCount < 7) {
+                    errorMessage += "يجب أن يكون هناك على الأقل 7 مرشحين من نوع تنافس في اربد.<br>";
+                    valid = false;
+                }
+                if (christianCount !== 0) {
+                    errorMessage += "لا يمكن وجود مرشح مسيحي في اربد.<br>";
+                    valid = false;
+                }
+            } else if (electionArea === "عجلون") {
+                if (kotaCount !== 1) {
+                    errorMessage += "يجب أن يكون هناك مرشح واحد من نوع كوتا في عجلون.<br>";
+                    valid = false;
+                }
+                if (competitiveCount < 2) {
+                    errorMessage += "يجب أن يكون هناك على الأقل 2 مرشحين من نوع تنافس في عجلون.<br>";
+                    valid = false;
+                }
+                if (christianCount === 0) {
+                    errorMessage += "يجب أن يكون هناك مرشح مسيحي واحد على الأقل في عجلون.<br>";
+                    valid = false;
+                }
+            }
+
+            if (!valid) {
+                event.preventDefault();
+                document.getElementById('error-message').innerHTML = errorMessage;
+                document.getElementById('error-message').style.display = 'block';
+            } else {
+                document.getElementById('error-message').style.display = 'none';
+                Swal.fire({
+                    icon: 'success',
+                    title: 'تم تسجيل طلبك بنجاح',
+                    showConfirmButton: true
+                }).then(() => {
+                    document.getElementById('candidateForm').submit(); // تابع إرسال النموذج بعد إغلاق popup
+                });
+
+                // منع إرسال النموذج فوراً لضمان إظهار الـ popup
+                event.preventDefault();
+
+            }
+        });
+    </script>
+}

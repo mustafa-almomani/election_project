@@ -1,0 +1,120 @@
+﻿@model IEnumerable<Election_projectFor_me.Models.GeneralListing>
+
+@{
+    ViewBag.Title = "List";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نتائج القوائم الحزبية</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,300,700|Raleway:300,400,500,700">
+    @*<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css">*@
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Open Sans', sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+        }
+
+        h2 {
+            font-size: 2.5rem;
+            color: #343a40;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        p#p {
+            font-size: 1.25rem;
+            color: #6c757d;
+            max-width: 800px;
+            margin: 0 auto 2rem auto;
+            padding: 1rem;
+            background-color: #ffffff;
+            border-radius: 0.5rem;
+            line-height: 1.6;
+            text-align: center;
+        }
+
+        .card {
+            border: none;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+            transition: transform 0.3s ease;
+        }
+
+            .card:hover {
+                transform: scale(1.03);
+            }
+
+        .card-image {
+            border-radius: 0.5rem 0.5rem 0 0;
+            height: 200px;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .card-body {
+            padding: 1.5rem;
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #343a40;
+        }
+
+        .card-text {
+            color: #495057;
+        }
+
+        .btn-primary {
+            background-color: #FF3B3B;
+            border: none;
+            border-radius: 0.25rem;
+            padding: 0.5rem 1rem;
+            font-size: 1rem;
+            transition: background-color 0.3s ease;
+        }
+
+            .btn-primary:hover {
+                background-color: #0056b3;
+            }
+    </style>
+</head>
+
+<body>
+
+    <div class="container my-5">
+        <h2>النتائج النهائية للقوائم الحزبية</h2>
+        <p id="p">
+            تعرض هذه الصفحة النتائج النهائية لانتخابات القوائم الحزبية، حيث يمكنك الاطلاع على توزيع المقاعد بين الأحزاب المختلفة بناءً على الأصوات التي حصلوا عليها.
+
+            <div class="row">
+                @foreach (var item in Model)
+                {
+                    <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
+                        <div class="card">
+                            <div class="card-image" style="background-image: url('https://sawtalhaq.com/assets/2024-06-06/images/4_news_1717660495.jpeg');"></div>
+                            <div class="card-body">
+                                <h5 class="card-title">@item.Name</h5>
+                                <p class="card-text">عدد الأصوات: @item.NumberOfVotes صوت</p>
+                                <a class="btn btn-primary" href="@Url.Action("TableOfList", "Result", new { id = item.GeneralListingID })">معرفة النتيجة</a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

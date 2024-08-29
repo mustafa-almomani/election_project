@@ -1,0 +1,163 @@
+﻿@model List<Election_projectFor_me.Models.GeneralListing>
+@{
+    ViewBag.Title = "Party Elections";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title</title>
+    
+    <style>
+        body {
+            background-color: #f0f2f5;
+            color: #343a40;
+            font-family: 'Arial', sans-serif;
+        }
+
+        .card {
+            border: 1px solid #dee2e6;
+            background-color: #fff;
+            color: #343a40;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            transition: transform 0.2s;
+        }
+
+            .card:hover {
+                transform: translateY(-10px);
+            }
+
+            .card img {
+                width: 100%;
+                height: 200px;
+                object-fit: cover;
+            }
+
+        .card-body {
+            padding: 1.5rem;
+        }
+
+        .text-section {
+            margin-bottom: 1rem;
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: black;
+        }
+
+        .card-text {
+            font-size: 1rem;
+            color: black;
+        }
+
+        h2 {
+            margin-bottom: 2rem;
+            text-align: center;
+            color: black;
+            font-size: 2.5rem;
+            font-weight: bold;
+        }
+
+        .container {
+            margin-top: 2rem;
+        }
+
+        .btn-primary {
+            background-color: #ff3b3b;
+            border: none;
+        }
+
+            .btn-primary:hover {
+                background-color: #0056b3;
+            }
+
+        .btn-secondary {
+            background-color: #6c757d;
+            border: none;
+        }
+
+            .btn-secondary:hover {
+                background-color: #5a6268;
+            }
+
+        .row {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+        }
+
+        .form-submit {
+            margin-top: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>الانتخابات الحزبية</h2>
+        <div class="row">
+            @foreach (var item in Model)
+            {
+                <div class="col-lg-4 col-sm-12 py-2">
+                    <div class="card">
+                        <img src="https://images-ext-1.discordapp.net/external/4TNL-c0hWSik01WcfmxZ1_ZQMFJr3NgMy2S8bT1IAbg/%3Fq%3Dtbn%3AANd9GcT0qnKmMeGLtwXkpSFJ0mPz2QP5ElIEFJ_M3w%26s/https/encrypted-tbn0.gstatic.com/images?format=webp&width=343&height=228" class="img-fluid" alt="@item.Name">
+                        <div class="card-body">
+                            <div class="text-section">
+                                <h5 class="card-title">@item.Name</h5>
+                                
+                            </div>
+                            <form action="@Url.Action("IncrementVote")" method="post" class="form-submit">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="id" value="@item.GeneralListingID" />
+                                <button type="submit" class="btn btn-primary btn-lg btn-block">تصويت</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            }
+            <div class="col-lg-4 col-sm-12 py-2">
+                <div class="card">
+                    <img src="~/electionImage/white-paper.png" class="img-fluid" alt="White Card">
+                    <div class="card-body">
+                        <div class="text-section">
+                            <h5 class="card-title">ورقة بيضاء</h5>
+                            <p class="card-text">حدد هذا الخيار إذا كنت لا ترغب في التصويت لأي حزب.</p>
+                        </div>
+                        <form action="@Url.Action("WhiteCard")" method="post" class="form-submit">
+                            @Html.AntiForgeryToken()
+                            <button type="submit" class="btn btn-secondary btn-lg btn-block">قم باختيار ورقة بيضاء</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('form').on('submit', function (e) {
+                e.preventDefault();
+
+                var form = $(this);
+                $.ajax({
+                    type: form.attr('method'),
+                    url: form.attr('action'),
+                    data: form.serialize(),
+                    success: function (response) {
+                        if (response.success) {
+                            window.location.href = response.redirectUrl;
+                        } else {
+                            alert(response.message);
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

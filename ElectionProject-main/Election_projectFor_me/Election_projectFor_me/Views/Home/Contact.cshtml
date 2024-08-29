@@ -1,0 +1,130 @@
+﻿@model Election_projectFor_me.Models.ContactFormModel
+@{
+    ViewBag.Title = "Contact";
+    var messege = ViewBag.SuccessMessage;
+}
+<!--Banner Section ======================-->
+<section class="section-banner banner-1 position-relative parallax" data-bs-theme="dark">
+    <div class="container">
+        <div class="banner-wrapper d-flex flex-column gap-3 gap-lg-20 justify-content-center align-items-lg-center">
+            <h2 class="banner-heading mb-0">Contact Us</h2>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb mb-0">
+                    <li class="breadcrumb-item"><a href="home-1.html" class="text-decoration-none link-hover-animation-1">Home</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Contact Us</li>
+                </ol>
+            </nav>
+        </div>
+        <!-- banner-wrapper -->
+    </div>
+    <!-- container -->
+</section>
+<!--Banner Section ======================-->
+<!--Contact Section ======================-->
+<section class="section-contact contact-2 py-60 py-lg-100 py-xxl-120 bg-custom-light">
+    <div class="container">
+        <div class="row align-items-center gx-60 gy-40">
+            <div class="col-lg-7">
+                <h6 class="subtitle lead text-primary mb-10 wow fadeInLeft" data-wow-duration="1.4s">تواصل معنا</h6>
+                <div class="d-flex flex-column gap-20">
+                    <h2 class="mb-0 wow fadeInLeft" data-wow-delay=".3s" data-wow-duration="1.4s">معلومات التواصل</h2>
+                    <p class="mb-10 wow fadeInLeft" data-wow-delay=".5s" data-wow-duration="1.4s">
+                        هل لديك أسئلة أو اقتراحات أو تريد فقط الاتصال؟ نحن نحب أن نسمع منك. تواصل معنا باستخدام معلومات الاتصال أدناه، وسيقوم فريقنا بالرد عليك في أقرب وقت ممكن.
+
+                    </p>
+                    <ul class="contact-lists list-unstyled mb-0 d-flex flex-column gap-3 wow fadeInLeft" data-wow-delay=".6s" data-wow-duration="1.4s">
+                        <li class="d-flex gap-20 align-items-center">
+                            <span class="contact-icon mail-icon text-white">
+                                <svg width="22" height="18"><use xlink:href="#mail-icon"></use></svg>
+                            </span>
+                            <h5 class="mb-0 fw-semibold"><a href="intackeb.gmail.com" class="text-decoration-none link-hover-animation-1">intackeb.gmail.com</a></h5>
+                        </li>
+                        <li class="d-flex gap-20 align-items-center">
+                            <span class="contact-icon location-icon text-white">
+                                <svg width="22" height="22"><use xlink:href="#location-icon"></use></svg>
+                            </span>
+                            <h5 class="mb-0 fw-semibold"><a id="mapDirectionBtn" href="#" class="text-decoration-none link-hover-animation-1" data-bs-toggle="modal" data-bs-target="#RoutingMapModal">
+    منطقة تلاع العلي - شارع إسماعيل حجازي بجانب مبنى ديوان المحاسبة
+
+</a></h5>
+                        </li>
+                        <li class="d-flex gap-20 align-items-center">
+                            <span class="contact-icon phone-icon text-white">
+                                <svg width="24" height="24"><use xlink:href="#phone-icon"></use></svg>
+                            </span>
+                            <h5 class="mb-0 fw-semibold"><a href="tel:(+0123)234556789" class="text-decoration-none link-hover-animation-1">(+0123) 2345 56789</a></h5>
+                        </li>
+                    </ul>
+                    <!-- contact-lists -->
+                </div>
+
+            </div>
+            <!-- col-7 -->
+
+            <div class="col-lg-5">
+                <div class="contact-image border-10 wow slideInRight" data-wow-duration="1.5s">
+                    <img src="~/assets/images/58aebaa89a06bc60dfecdcb96f09e0cf.jpg" class="img-fluid" alt="contact-image">
+                </div>
+            </div>
+            <!-- col-5 -->
+        </div>
+        <!-- row -->
+    </div>
+    <!-- container -->
+</section>
+<!--Contact Section ======================-->
+<!--Contact Section ======================-->
+<section class="section-contact contact-3 py-60 py-lg-100 py-xxl-120">
+    <div class="container">
+        <div class="contact-form-wrapper bg-custom-light p-4 p-lg-40">
+            <h2 class="mb-30 mb-lg-40 text-lg-center wow fadeInUp">تواصل معنا</h2>
+
+            @using (Html.BeginForm("Contact", "Home", FormMethod.Post))
+            {
+                @Html.AntiForgeryToken()
+
+                <div class="col-12">
+                    <label for="InputName" class="form-label">Full Name</label>
+                    <input type="text" class="form-control" id="InputName" name="Name" required="">
+                </div>
+
+                <div class="col-12">
+                    <label for="InputEmail" class="form-label">Email Address</label>
+                    <input type="email" class="form-control" id="InputEmail" name="Email" required="">
+                </div>
+                <div class="col-12">
+                    <label for="InputMessage" class="form-label">Message</label>
+                    <textarea class="form-control" id="InputMessage" name="Message" rows="3"></textarea>
+                </div>
+                <div class="col-12">
+                    <button type="submit" class="btn btn-primary">Submit Now</button>
+                </div>
+                <div class="response py-1"></div>
+            }
+
+
+        </div>
+        <!-- contact-form-wrapper -->
+    </div>
+    <!-- container -->
+</section>
+<!--Contact Section ======================-->
+<!--Volunteer Section ======================-->
+
+<!--Volunteer Section ======================-->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Get the message from the ViewBag
+        var message = '@ViewBag.MessageSent';
+
+        if (message) {
+            Swal.fire({
+                title: 'تم إرسال رسالتك بنجاح',
+                icon: 'success',
+                confirmButtonText: 'موافق'
+            });
+        }
+    });
+</script>

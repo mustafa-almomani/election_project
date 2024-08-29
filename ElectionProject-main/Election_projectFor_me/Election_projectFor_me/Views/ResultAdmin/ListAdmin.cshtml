@@ -1,0 +1,98 @@
+﻿@model IEnumerable<Election_projectFor_me.Models.GeneralListing>
+
+@{
+    ViewBag.Title = "List";
+    Layout = "~/Views/Shared/_LayoutPage1.cshtml";
+}
+
+<head>
+    <meta charset="utf-8">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:400,300,700|Raleway:300,400,500,700">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        body {
+            margin: 0;
+            font-family: Open-sans, sans-serif;
+        }
+
+        h1, h2, h3 {
+            font-family: Raleway, Helvetica, sans-serif;
+        }
+
+        h2 {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 30px;
+            margin-top: 0;
+        }
+
+        .table-container {
+            margin-top: 50px;
+        }
+
+        .table th, .table td {
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        .table th {
+            background-color: #f8f9fa;
+            font-weight: bold;
+        }
+
+        .table-hover tbody tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+
+            .btn-primary:hover {
+                background-color: #0056b3;
+                border-color: #0056b3;
+            }
+    </style>
+</head>
+
+<body>
+    <div class="container table-container">
+        <h2 class="text-center">النتائج النهائية للقوائم الحزبية</h2>
+        <p class="text-center" id="p">
+            تعرض هذه الصفحة النتائج النهائية لانتخابات القوائم الحزبية، حيث يمكنك الاطلاع على توزيع المقاعد بين الأحزاب المختلفة بناءً على الأصوات التي حصلوا عليها. تقدم النتائج نظرة شاملة على الأداء الانتخابي لكل حزب وكيفية تأثيره على التوازن السياسي في المرحلة المقبلة. استخدم هذه المعلومات لفهم كيفية تشكيل الحكومة وتوزيع القوى السياسية في البرلمان.
+        </p>
+        <br />
+
+        <table class="table table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th>اسم القائمة</th>
+                    <th>عدد الاصوات</th>
+                    <th>النتيجة</th>
+                    <th>الإجراء</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.Name</td>
+                        <td>@item.NumberOfVotes</td>
+                        <td>@item.Sucess</td>
+                        <td>
+                            <a class="btn btn-primary" href="@Url.Action("TableOfListAdmin", "ResultAdmin", new { id = item.GeneralListingID })">معرفة النتيجة</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Including Bootstrap JS (with its jQuery dependency) so that dynamic components work -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+</body>

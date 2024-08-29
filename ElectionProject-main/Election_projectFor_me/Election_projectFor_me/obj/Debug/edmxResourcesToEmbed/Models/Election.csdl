@@ -1,0 +1,286 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="ELECTION_PROJECTModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="USER">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="NationalNumber" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Email" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="Password" Type="String" MaxLength="25" FixedLength="false" Unicode="false" />
+    <Property Name="FullName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="ElectionArea" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="Governorate" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="BirthDate" Type="DateTime" Precision="0" />
+    <Property Name="Gender" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+    <Property Name="ElectionPlace" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="LocalElections" Type="Boolean" />
+    <Property Name="PartyElections" Type="Boolean" />
+    <Property Name="whitePaperLocalElections" Type="Boolean" />
+    <Property Name="whitePaperPartyElections" Type="Boolean" />
+  </EntityType>
+  <EntityContainer Name="ELECTION_PROJECTEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="USERS" EntityType="Self.USER" />
+    <EntitySet Name="GeneralListCandidates" EntityType="ELECTION_PROJECTModel.GeneralListCandidate" />
+    <EntitySet Name="GeneralListings" EntityType="ELECTION_PROJECTModel.GeneralListing" />
+    <AssociationSet Name="FK__GeneralLi__Gener__440B1D61" Association="ELECTION_PROJECTModel.FK__GeneralLi__Gener__440B1D61">
+      <End Role="GeneralListing" EntitySet="GeneralListings" />
+      <End Role="GeneralListCandidate" EntitySet="GeneralListCandidates" />
+    </AssociationSet>
+    <EntitySet Name="LocalLists" EntityType="ELECTION_PROJECTModel.LocalList" />
+    <EntitySet Name="LocalListCandidates" EntityType="ELECTION_PROJECTModel.LocalListCandidate" />
+    <AssociationSet Name="FK__LocalList__Local__4F7CD00D" Association="ELECTION_PROJECTModel.FK__LocalList__Local__4F7CD00D">
+      <End Role="LocalList" EntitySet="LocalLists" />
+      <End Role="LocalListCandidate" EntitySet="LocalListCandidates" />
+    </AssociationSet>
+    <EntitySet Name="Ads" EntityType="ELECTION_PROJECTModel.Ad" />
+    <EntitySet Name="Contacts" EntityType="ELECTION_PROJECTModel.Contact" />
+    <EntitySet Name="DATES" EntityType="ELECTION_PROJECTModel.DATE" />
+    <EntitySet Name="Payments" EntityType="ELECTION_PROJECTModel.Payment" />
+    <AssociationSet Name="FK__Ads__PaymentID__6754599E" Association="ELECTION_PROJECTModel.FK__Ads__PaymentID__6754599E">
+      <End Role="Payment" EntitySet="Payments" />
+      <End Role="Ad" EntitySet="Ads" />
+    </AssociationSet>
+    <EntitySet Name="Debates" EntityType="ELECTION_PROJECTModel.Debate" />
+    <EntitySet Name="Admins" EntityType="ELECTION_PROJECTModel.Admin" />
+    <EntitySet Name="Areas" EntityType="ELECTION_PROJECTModel.Area" />
+    <EntitySet Name="Date1" EntityType="ELECTION_PROJECTModel.Date1" />
+    <EntitySet Name="sysdiagrams" EntityType="ELECTION_PROJECTModel.sysdiagram" />
+    <EntitySet Name="User1" EntityType="ELECTION_PROJECTModel.User1" />
+    <AssociationSet Name="AREA_FK" Association="ELECTION_PROJECTModel.AREA_FK">
+      <End Role="Area" EntitySet="Areas" />
+      <End Role="LocalList" EntitySet="LocalLists" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="GeneralListCandidate">
+    <Key>
+      <PropertyRef Name="CandidateID" />
+    </Key>
+    <Property Name="CandidateID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="CandidateName" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="GeneralListingID" Type="Int32" />
+    <Property Name="listname" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="GeneralListing" Relationship="ELECTION_PROJECTModel.FK__GeneralLi__Gener__440B1D61" FromRole="GeneralListCandidate" ToRole="GeneralListing" />
+    <Property Name="Sucess" Type="Boolean" Nullable="false" />
+  </EntityType>
+  <EntityType Name="GeneralListing">
+    <Key>
+      <PropertyRef Name="GeneralListingID" />
+    </Key>
+    <Property Name="GeneralListingID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="NumberOfVotes" Type="Int32" />
+    <Property Name="img" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="Sucess" Type="Boolean" Nullable="false" />
+    <NavigationProperty Name="GeneralListCandidates" Relationship="ELECTION_PROJECTModel.FK__GeneralLi__Gener__440B1D61" FromRole="GeneralListing" ToRole="GeneralListCandidate" />
+    <Property Name="image" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <Association Name="FK__GeneralLi__Gener__440B1D61">
+    <End Type="ELECTION_PROJECTModel.GeneralListing" Role="GeneralListing" Multiplicity="0..1" />
+    <End Type="ELECTION_PROJECTModel.GeneralListCandidate" Role="GeneralListCandidate" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="GeneralListing">
+        <PropertyRef Name="GeneralListingID" />
+      </Principal>
+      <Dependent Role="GeneralListCandidate">
+        <PropertyRef Name="GeneralListingID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityType Name="LocalList">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="ListName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="NumberOfVotes" Type="Int32" />
+    <Property Name="ElectionArea" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="Governorate" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Sucess" Type="Boolean" Nullable="false" />
+    <Property Name="img" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="LocalListCandidates" Relationship="ELECTION_PROJECTModel.FK__LocalList__Local__4F7CD00D" FromRole="LocalList" ToRole="LocalListCandidate" />
+    <Property Name="ElectionAreaID" Type="Int32" />
+    <Property Name="image" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="Area" Relationship="ELECTION_PROJECTModel.AREA_FK" FromRole="LocalList" ToRole="Area" />
+  </EntityType>
+  <EntityType Name="LocalListCandidate">
+    <Key>
+      <PropertyRef Name="CandidateID" />
+    </Key>
+    <Property Name="CandidateID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="CandidateName" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="NationalNumber" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
+    <Property Name="Governorate" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="ElectionArea" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="NumberOfVotesCandidate" Type="Int32" />
+    <Property Name="LocalListingID" Type="Int32" />
+    <Property Name="typeofCandidates" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="listname" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="Gender" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+    <Property Name="img" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="Sucess" Type="Boolean" Nullable="false" />
+    <NavigationProperty Name="LocalList" Relationship="ELECTION_PROJECTModel.FK__LocalList__Local__4F7CD00D" FromRole="LocalListCandidate" ToRole="LocalList" />
+    <Property Name="image" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+  </EntityType>
+  <Association Name="FK__LocalList__Local__4F7CD00D">
+    <End Type="ELECTION_PROJECTModel.LocalList" Role="LocalList" Multiplicity="0..1" />
+    <End Type="ELECTION_PROJECTModel.LocalListCandidate" Role="LocalListCandidate" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="LocalList">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="LocalListCandidate">
+        <PropertyRef Name="LocalListingID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityType Name="Ad">
+    <Key>
+      <PropertyRef Name="AdID" />
+    </Key>
+    <Property Name="AdID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="NationalNumber" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="CandidateName" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="Title" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="Content" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="URLPath" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="PaymentID" Type="Int32" Nullable="false" />
+    <Property Name="StatusOfAds" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+    <Property Name="StartDate" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="EndDate" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="ListName" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="Type" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="AdminComment" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="Payment" Relationship="ELECTION_PROJECTModel.FK__Ads__PaymentID__6754599E" FromRole="Ad" ToRole="Payment" />
+  </EntityType>
+  <EntityType Name="Contact">
+    <Key>
+      <PropertyRef Name="ContactID" />
+    </Key>
+    <Property Name="ContactID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="SenderName" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="SenderEmail" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="Message" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="SubmissionDate" Type="DateTime" Precision="3" />
+  </EntityType>
+  <EntityType Name="DATE">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="startDateNominate" Type="DateTime" Precision="3" />
+    <Property Name="EndDateNominate" Type="DateTime" Precision="3" />
+    <Property Name="startDateOfElection" Type="DateTime" Precision="3" />
+    <Property Name="EndDateOfElection" Type="DateTime" Precision="3" />
+  </EntityType>
+  <EntityType Name="Payment">
+    <Key>
+      <PropertyRef Name="PaymentID" />
+    </Key>
+    <Property Name="PaymentID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Amount" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+    <Property Name="PaymentDate" Type="DateTime" Precision="3" />
+    <Property Name="PaymentMethod" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="TransactionID" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="Status" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="PaymentGatway" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="Ads" Relationship="ELECTION_PROJECTModel.FK__Ads__PaymentID__6754599E" FromRole="Payment" ToRole="Ad" />
+    <Property Name="PaymentGateway" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <Association Name="FK__Ads__PaymentID__6754599E">
+    <End Type="ELECTION_PROJECTModel.Payment" Role="Payment" Multiplicity="1" />
+    <End Type="ELECTION_PROJECTModel.Ad" Role="Ad" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Payment">
+        <PropertyRef Name="PaymentID" />
+      </Principal>
+      <Dependent Role="Ad">
+        <PropertyRef Name="PaymentID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityType Name="Debate">
+    <Key>
+      <PropertyRef Name="DebateID" />
+    </Key>
+    <Property Name="DebateID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="DebateTitle" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="DebateDate" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="Location" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="Candidate1ID" Type="Int32" Nullable="false" />
+    <Property Name="Candidate2ID" Type="Int32" Nullable="false" />
+    <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Status" Type="Boolean" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Admin">
+    <Key>
+      <PropertyRef Name="AdminID" />
+    </Key>
+    <Property Name="AdminID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Username" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="PasswordHash" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="img" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Email" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityType Name="Area">
+    <Key>
+      <PropertyRef Name="ElectionAreaID" />
+    </Key>
+    <Property Name="ElectionAreaID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="NameOfElectionArea" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="NumberOfElectoralSeats" Type="Int32" />
+    <Property Name="Governorate" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="LocalLists" Relationship="ELECTION_PROJECTModel.AREA_FK" FromRole="Area" ToRole="LocalList" />
+  </EntityType>
+  <EntityType Name="Date1">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="StartDateNominate" Type="DateTime" Precision="3" />
+    <Property Name="EndDateNominate" Type="DateTime" Precision="3" />
+    <Property Name="StartDateOfElection" Type="DateTime" Precision="3" />
+    <Property Name="EndDateOfElection" Type="DateTime" Precision="3" />
+  </EntityType>
+  <EntityType Name="sysdiagram">
+    <Key>
+      <PropertyRef Name="diagram_id" />
+    </Key>
+    <Property Name="name" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+    <Property Name="principal_id" Type="Int32" Nullable="false" />
+    <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="version" Type="Int32" />
+    <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+  </EntityType>
+  <EntityType Name="User1">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="NationalNumber" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
+    <Property Name="Email" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="Password" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="FullName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="ElectionArea" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="Governorate" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="BirthDate" Type="DateTime" Precision="0" />
+    <Property Name="Gender" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+    <Property Name="LocalElections" Type="Boolean" />
+    <Property Name="PartyElections" Type="Boolean" />
+    <Property Name="WhitePaperLocalElections" Type="Boolean" />
+    <Property Name="WhitePaperPartyElections" Type="Boolean" />
+    <Property Name="Pollingplace" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <Association Name="AREA_FK">
+    <End Type="ELECTION_PROJECTModel.Area" Role="Area" Multiplicity="0..1" />
+    <End Type="ELECTION_PROJECTModel.LocalList" Role="LocalList" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Area">
+        <PropertyRef Name="ElectionAreaID" />
+      </Principal>
+      <Dependent Role="LocalList">
+        <PropertyRef Name="ElectionAreaID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema>

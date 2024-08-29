@@ -1,0 +1,63 @@
+﻿@model Election_projectFor_me.Models.Admin
+
+@{
+    ViewBag.Title = "LoginAdmin";
+    Layout = null;
+}
+
+<head>
+    <title>Admin Login</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8" />
+    <meta name="keywords" content="Admin Login Form" />
+    <link rel="stylesheet" href="~/adminLogin/css/style.css" type="text/css" media="all" />
+    <link rel="stylesheet" href="~/adminLogin/fontawesome-all.css">
+    <link href="//fonts.googleapis.com/css?family=Reem+Kufi&amp;subset=arabic" rel="stylesheet">
+    <link href="//fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i,800,800i" rel="stylesheet">
+</head>
+
+<body>
+    <h1>
+        <span>A</span>dmin
+        <span>L</span>ogin
+    </h1>
+
+    <div class="sub-main-w3" >
+        <div style="margin:0 auto">
+        @using (Html.BeginForm("LoginAdmin", "Admin", FormMethod.Post, new { @class = "form-horizontal" }))
+        {
+            @Html.AntiForgeryToken()
+            <div class="form-style-agile">
+                @Html.LabelFor(m => m.Email, new { @class = "control-label" })
+                <i class="fas fa-user"></i>
+                @Html.TextBox("Email", null, new { @class = "form-control", placeholder = "Email" })
+                @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
+            </div>
+            <div class="form-style-agile">
+                @Html.LabelFor(m => m.PasswordHash, new { @class = "control-label" })
+                <i class="fas fa-unlock-alt"></i>
+                @Html.Password("Password", new { @class = "form-control", placeholder = "Password" })
+                @Html.ValidationMessageFor(m => m.PasswordHash, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="wthree-text">
+                <ul>
+                    <li>
+                        <label class="anim">
+                            <input type="checkbox" class="checkbox" name="RememberMe" />
+                            <span>Remember me</span>
+                        </label>
+                    </li>
+                    <li>
+                        <a href="#">Forgot Password?</a>
+                    </li>
+                </ul>
+            </div>
+            <input type="submit" value="Log In">
+            <div class="text-danger">
+                @ViewBag.Message
+            </div>
+        }
+        </div>
+    </div>
+</body>

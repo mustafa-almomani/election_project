@@ -1,0 +1,172 @@
+﻿<style>
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f0f2f5;
+        margin: 0;
+        padding: 0;
+    }
+
+    
+
+    .card {
+        background: #ffffff;
+        border: 1px solid #e0e0e0;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        transition: box-shadow 0.3s ease-in-out, transform 0.3s ease-in-out;
+        margin-bottom: 20px;
+    }
+
+    .card-title {
+        margin-bottom: 20px;
+        font-size: 1.75em;
+        font-weight: 600;
+        color: #333;
+    }
+
+    .card-radio {
+        position: relative;
+        padding: 20px;
+        border: 1px solid #e0e0e0;
+        border-radius: 12px;
+        background: #ffffff;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+        transition: box-shadow 0.3s ease-in-out, transform 0.3s ease-in-out;
+    }
+
+        .card-radio input[type="radio"] {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            margin-right: 15px;
+        }
+
+        .card-radio img {
+            width: 50px;
+            height: auto;
+            border-radius: 6px;
+            transition: transform 0.3s ease-in-out;
+        }
+
+            
+
+    .candidate-checkboxes {
+        margin-top: 10px;
+        display: none; /* Initially hide candidate checkboxes */
+    }
+
+    .candidate-checkbox {
+        margin-top: 10px;
+        display: flex;
+        align-items: center;
+        padding: 10px;
+        border-top: 1px solid #e0e0e0;
+    }
+
+        .candidate-checkbox input[type="checkbox"] {
+            margin-right: 10px;
+        }
+
+        .candidate-checkbox img {
+            width: 30px;
+            height: 30px;
+            margin-right: 10px;
+        }
+
+    .form-check-label {
+        font-size: 1.1em;
+        color: #555;
+    }
+
+    .text-center {
+        text-align: center;
+    }
+
+    .btn-success {
+        background-color: #007bff;
+        border-color: #007bff;
+        color: #ffffff;
+        padding: 12px 24px;
+        font-size: 1.1em;
+        border-radius: 6px;
+        transition: background-color 0.3s ease-in-out, transform 0.2s ease-in-out;
+    }
+
+        .btn-success:hover {
+            background-color: #0056b3;
+            border-color: #004494;
+            transform: scale(1.05);
+        }
+
+    .card:hover {
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        transform: translateY(-5px);
+    }
+</style>
+
+@using (Html.BeginForm("IncrementVoteLocal", "USER", FormMethod.Post, new { id = "voteForm", @class = "container mt-5" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="card">
+        <div class="card-body">
+            <h3 class="card-title">حدد القائمة ومرشحيها للتصويت</h3>
+            <div class="form-group">
+                @foreach (var list in Model.LocalLists)
+                {
+                    <div class="card-radio">
+                        <input class="form-check-input" type="radio" id="list_@list.ID" name="listId" value="@list.ID" required />
+                        <img src="@Url.Content("~/electionImage/" + list.image)" alt="List Image" />
+                        <label class="form-check-label" for="list_@list.ID">@list.ListName</label>
+                        <div class="candidate-checkboxes" id="candidates_@list.ID">
+                            @foreach (var candidate in list.LocalListCandidates)
+                            {
+                                <div class="candidate-checkbox">
+                                    <input type="checkbox" name="candidateIds" value="@candidate.CandidateID" id="candidate_@candidate.CandidateID" />
+                                    <img src="@Url.Content("~/electionImage/" + candidate.image)" alt="Candidate Image" />
+                                    <label class="form-check-label" for="candidate_@candidate.CandidateID">@candidate.CandidateName</label>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                }
+            </div>
+            <div class="text-center">
+                <button type="submit" id="submitVoteButton" class="btn btn-success mt-3">تصويت</button>
+            </div>
+        </div>
+    </div>
+}
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('input[name="listId"]').change(function () {
+                var selectedListId = $(this).val();
+                $('.candidate-checkboxes').hide(); 
+                $('#candidates_' + selectedListId).show(); 
+            });
+
+            $('#voteForm').submit(function (event) {
+                event.preventDefault();
+
+                $.ajax({
+                    url: $(this).attr('action'),
+                    type: 'POST',
+                    data: $(this).serialize(),
+                    success: function (response) {
+                        if (response.success) {
+                            window.location.href = response.redirectUrl;
+                        } else {
+                            alert(response.message);
+                        }
+                    },
+                    error: function () {
+                        alert('An error occurred while processing your request.');
+                    }
+                });
+            });
+        });
+    </script>
+}

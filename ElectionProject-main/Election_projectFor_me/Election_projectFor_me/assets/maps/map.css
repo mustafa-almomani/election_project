@@ -1,0 +1,114 @@
+body{
+
+}
+.map {
+    font-family: Arial, sans-serif;
+    direction: rtl;
+    margin: 0;
+    padding: 0;
+
+    position: relative;
+    width: 800px; /* اضبط العرض حسب الحاجة */
+    height: 800px; /* اضبط الارتفاع حسب الحاجة */
+    /* border: 1px solid #000; */
+    background-image: url('maps/map-ar.png'); /* رابط الصورة الخلفية */
+    background-size: cover;
+    margin: 20px auto;
+    background-position: center;
+    margin-top: -193px;
+    left: -30.5em;
+    /* color: #ffffff; */
+}
+.province.active .name {
+    display: none;
+}
+
+.province {
+    position: absolute;
+    padding: 5px;
+    text-align: center;
+    box-sizing: border-box;
+    cursor: pointer;
+    /* transition: background-color 0.3s ease; */
+    width: 40px;
+    height: 40px;
+    /* color: #fff;  */
+}
+
+.province:hover .mark {
+    display: inline; /* Show the mark only when hovering over the province */
+}
+
+.popup {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    /* background-color: #fff; */
+    border: 1px solid #000;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    z-index: 1000;
+}
+
+.popup button {
+    margin-top: 10px;
+}
+
+#amman {
+    top: 324px;
+    left: 285px;
+}
+#zarqa {
+    top: 295px;
+    left: 370px;
+}
+#irbid {
+    top: 189px;
+    left: 218px;
+}
+#ajloun {
+    width: 1.5em;
+    height: 1.5em;
+    top: 227px;
+    left: 213px;
+}
+#mafraq {
+    top: 222px;
+    left: 470px;
+}
+#madaba {
+    top: 322px;
+    left: 200px;
+}
+#kark {
+    top: 380px;
+    left: 210px;
+}
+#tafileh {
+    top: 444px;
+    left: 190px;
+}
+#aqaba {
+    top: 595px;
+    left: 150px;
+}
+#jarash {
+    top: 240px;
+    left: 224px;
+    /* width: 15px; */
+    height: 15px;
+}
+#balqa {
+    top: 262px;
+    left: 194px;
+}
+#maan {
+    top: 506px;
+    left: 310px;
+}
+
+.grey-bg-03 {
+    /* background: #ffffff; */
+}

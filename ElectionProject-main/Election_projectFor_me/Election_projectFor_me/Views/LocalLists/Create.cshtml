@@ -1,0 +1,96 @@
+﻿@model Election_projectFor_me.Models.LocalList
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    section.img-h-100.bg-dark {
+        background-color: rgb(209 209 209) !important;
+    }
+    .card-body.p-md-5.text-black input, .card-body.p-md-5.text-black select {
+        width: 500px;
+    }
+</style>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    @* عرض جميع رسائل الخطأ في الجزء العلوي من النموذج *@
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+    <section class="img-h-100 bg-dark" style="direction:ltr">
+        <div class="container py-5 h-100">
+            <div class="row d-flex justify-content-center align-items-center h-100">
+                <div class="col">
+                    <div class="card card-registration my-4">
+                        <div class="row g-0">
+                            <div class="col-xl-6 d-none d-xl-block">
+                                <img src="~/assets/images/نواب.jpg"
+                                     alt="Sample photo" class="img-fluid"
+                                     style="border-top-left-radius: .25rem; border-bottom-left-radius: .25rem; height:500px;width:100%" />
+                            </div>
+                            <div class="col-xl-6">
+                                <div class="card-body p-md-5 text-black" style=" direction: rtl;">
+                                    <h3 class="mb-5 text-uppercase">نموذج تسجيل قائمه</h3>
+
+                                    <div class="row">
+                                        <div class="col-md-11 mb-6">
+                                            <div data-mdb-input-init class="form-outline">
+                                                @Html.TextBoxFor(m => m.ListName, new { @class = "form-control form-control-lg" })
+                                                <label class="form-label">اسم القائمه</label>
+                                                @Html.ValidationMessageFor(m => m.ListName, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                        <div class="">
+                                            <div data-mdb-input-init class="form-outline">
+                                                @Html.DropDownListFor(m => m.ElectionArea, new List<SelectListItem>
+                                                {
+                                                    new SelectListItem { Text = "الدائره الانتخابيه ", Value = "City" },
+                                                    new SelectListItem { Text = "عجلون", Value = "عجلون" },
+                                                    new SelectListItem { Text = "اربد", Value = "اربد" },
+                                                    new SelectListItem { Text = "جرش ", Value = "جرش" }
+                                                }, new { @class = "form-control form-control-lg" })
+                                                <label class="form-label">الدائره الانتخابيه</label>
+                                                @Html.ValidationMessageFor(m => m.ElectionArea, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-6 mb-4">
+                                            @Html.DropDownListFor(m => m.Governorate, new List<SelectListItem>
+                                            {
+                                                new SelectListItem { Text = "المحافظه", Value = "City" },
+                                                new SelectListItem { Text = "عجلون", Value = "عجلون" },
+                                                new SelectListItem { Text = "اربد", Value = "اربد" },
+                                                new SelectListItem { Text = "جرش ", Value = "جرش" }
+                                            }, new { @class = "form-control form-control-lg" })
+                                            <label class="form-label">المحافظه</label>
+                                            @Html.ValidationMessageFor(m => m.Governorate, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-10 mb-4">
+                                            <div class="col-md-10">
+                                                @Html.TextBoxFor(m => m.image, new { type = "file", @class = "form-control " })
+                                                @Html.ValidationMessageFor(model => model.image, "", new { @class = "text-danger" })
+                                            </div>
+                                            <label>تحميل صوره </label>
+                                            @*@Html.LabelFor(model => model.image, htmlAttributes: new { @class = "control-label" })*@
+                                        </div>
+                                    </div>
+
+                                    <button type="submit" class="btn btn-primary btn-lg">التالي</button>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+}

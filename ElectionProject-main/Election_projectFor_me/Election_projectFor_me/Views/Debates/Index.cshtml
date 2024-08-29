@@ -1,0 +1,165 @@
+﻿@model IEnumerable<Election_projectFor_me.Models.Debate>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title</title>
+    <link rel="stylesheet" href="~/Content/css/StyleSheet1.css">
+    @*<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">*@
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script> <!-- FontAwesome for icons -->
+    <style>
+      
+
+        body {
+            direction: rtl;
+            text-align: right;
+            background-color: var(--bs-light);
+            color: var(--bs-dark);
+            padding: 20px;
+        }
+
+        .card {
+            margin-bottom: 20px;
+            border-radius: 10px;
+            overflow: hidden;
+            background-color: var(--bs-white);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-img-top {
+            width: 100%;
+            height: auto;
+            max-height: 200px;
+            object-fit: cover;
+        }
+
+        .card-body {
+            padding: 15px;
+            color: var(--bs-dark);
+            text-align: center;
+        }
+
+        .card-header {
+            background-color: var(--bs-primary);
+            color: var(--bs-white);
+            text-align: center;
+            font-weight: bold;
+            padding: 10px;
+        }
+
+        .container {
+            max-width: 1200px;
+        }
+/*
+        h1, h2 {
+            color: var(--bs-primary);
+        }*/
+
+    /*    footer {
+            background-color: var(--bs-light);
+            color: var(--bs-dark);
+            padding: 10px;
+        }*/
+    </style>
+    <script>
+        function showDebateAlert() {
+            alert("تم إرسال الطلب إلى المسؤول وبانتظار الرد.");
+        }
+    </script>
+</head>
+<body>
+    <header>
+        <div class="container mt-4">
+            <h1 class="text-center">مناظرات - الصفحة الرئيسية</h1>
+            <div class="row justify-content-center">
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100">
+                        <img src="~/assets/images/pic4.jpg" class="card-header" alt="...">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    <img src="~/assets/images/pic1.jpg" class="card-img-top" alt="...">
+                    <div class="card-body">
+                        <h5 class="card-title">نظرة عامة عن أهمية المناظرات</h5>
+                        <p class="card-text">تفاصيل المناظرة الرئاسية القادمة وكيفية متابعة الأحداث.</p>
+                        <a href="https://ar.wikipedia.org/wiki/%D9%85%D9%86%D8%A7%D8%B8%D8%B1%D8%A9" class="btn btn-primary">إقرأ المزيد</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    <img src="~/assets/images/pic2.jpg" class="card-img-top" alt="...">
+                    <div class="card-body">
+                        <h5 class="card-title">روابط للمناقشات الرئيسية القادمة أو الماضية.</h5>
+                        <p class="card-text">اطلع على مواعيد المناظرات والأحداث السياسية المقبلة.</p>
+                        <a href="https://www.iec.jo/ar/%D8%B1%D9%88%D8%A7%D8%A8%D8%B7-%D9%85%D9%81%D9%8A%D8%AF%D8%A9" class="btn btn-primary">إقرأ المزيد</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    <img src="~/assets/images/pic3.jpg" class="card-img-top" alt="...">
+                    <div class="card-body">
+                        <h5 class="card-title">الأخبار والتحديثات المتعلقة بالمناظرات.</h5>
+                        <p class="card-text">احصل على معلومات إضافية حول المناظرات وكيفية المشاركة.</p>
+                        <a href="https://ar.wikipedia.org/wiki/%D9%85%D9%86%D8%A7%D8%B8%D8%B1%D8%A9" class="btn btn-primary">إقرأ المزيد</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container mt-4">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h2>قائمة المناظرات</h2>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    @foreach (var item in Model)
+                    {
+                        <div class="col-md-4 mb-4">
+                            <div class="card h-100">
+                                <img width="100%" height="auto" src="~/assets/images/imagecards.jpg" alt="Debate Image" class="card-img-top" />
+                                <div class="card-body">
+                                    <h5 class="card-title">@Html.DisplayFor(modelItem => item.DebateTitle)</h5>
+                                    <p class="card-text">
+                                        <strong>التاريخ:</strong> @Html.DisplayFor(modelItem => item.DebateDate)<br />
+                                        <strong>الموقع:</strong> @Html.DisplayFor(modelItem => item.Location)<br />
+                                        <strong>مرشح 1:</strong> @Html.DisplayFor(modelItem => item.Candidate1ID)<br />
+                                        <strong>مرشح 2:</strong> @Html.DisplayFor(modelItem => item.Candidate2ID)<br />
+                                        <strong>الوصف:</strong> @Html.DisplayFor(modelItem => item.Description)<br />
+                                    </p>
+                                    <!-- Blue Button for Joining Meeting -->
+                                    <a href="@Url.Action("JoinMeeting", "Debates", new { id = item.DebateID })" class="btn btn-primary">انضم إلى الاجتماع</a>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    <p>@Html.ActionLink("إنشاء جديد", "Create", "Debates", null, new { @class = "btn btn-primary" })</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="text-center mt-4">
+        <p>&copy; 2024 جميع الحقوق محفوظة.</p>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

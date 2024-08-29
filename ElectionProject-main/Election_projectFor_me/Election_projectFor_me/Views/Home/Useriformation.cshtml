@@ -1,0 +1,101 @@
+﻿@model Election_projectFor_me.Models.USER
+@{
+    ViewBag.Title = "User Information";
+}
+
+<body dir="rtl">
+    <div class="container mt-5">
+        <h2 class="text-center mb-5">معلومات المستخدم</h2>
+
+        <!-- Form Card -->
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card mb-5 shadow-sm border-0">
+                    <div class="card-header bg-primary text-white text-center">
+                        <h4 class="mb-0">معلومات المستخدم</h4>
+                    </div>
+                    <div class="card-body p-4">
+                        @using (Html.BeginForm("Useriformation", "Home", FormMethod.Post))
+                        {
+                            @Html.AntiForgeryToken()
+
+                            <div class="form-horizontal">
+                                @Html.ValidationSummary(true, "", new { @class = "text-danger text-center" })
+
+                                <div class="form-group mb-3">
+                                    @Html.LabelFor(model => model.NationalNumber, htmlAttributes: new { @class = "control-label col-form-label" })
+                                    <div class="input-group">
+                                        @Html.EditorFor(model => model.NationalNumber, new { htmlAttributes = new { @class = "form-control", @placeholder = "أدخل الرقم الوطني" } })
+                                    </div>
+                                    @Html.ValidationMessageFor(model => model.NationalNumber, "", new { @class = "text-danger" })
+                                </div>
+
+                                <div class="form-group text-center">
+                                    <input type="submit" value="إرسال" class="btn btn-primary btn-sm px-5" />
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- User Details Card with Table -->
+        @if (Model != null)
+        {
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    <div class="card shadow-sm border-0">
+                        <div class="card-header bg-success text-white text-center">
+                            <h4 class="mb-0">تفاصيل المستخدم</h4>
+                        </div>
+                        <div class="card-body p-4">
+                            <div class="table-responsive">
+                                <table class="table table-bordered">
+                                    <tbody>
+                                        <tr>
+                                            <th>الاسم الكامل</th>
+                                            <td>@Html.DisplayFor(model => model.FullName)</td>
+                                        </tr>
+                                        <tr>
+                                            <th>البريد الإلكتروني</th>
+                                            <td>@Html.DisplayFor(model => model.Email)</td>
+                                        </tr>
+                                        <tr>
+                                            <th>منطقة الانتخاب</th>
+                                            <td>@Html.DisplayFor(model => model.ElectionArea)</td>
+                                        </tr>
+                                        <tr>
+                                            <th>المحافظة</th>
+                                            <td>@Html.DisplayFor(model => model.Governorate)</td>
+                                        </tr>
+                                        <tr>
+                                            <th>تاريخ الميلاد</th>
+                                            <td>@Html.DisplayFor(model => model.BirthDate)</td>
+                                        </tr>
+                                        <tr>
+                                            <th>الجنس</th>
+                                            <td>@Html.DisplayFor(model => model.Gender)</td>
+                                        </tr>
+                                        <tr>
+                                            <th>مكان الانتخاب</th>
+                                            <td>@Html.DisplayFor(model => model.ElectionPlace)</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+
+        <div class="row mt-4 justify-content-center">
+            <div class="col-md-4">
+                @Html.ActionLink("العودة إلى القائمة", "Index", null, new { @class = "btn btn-secondary w-100" })
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>

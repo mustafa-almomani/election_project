@@ -1,0 +1,40 @@
+﻿@model Election_projectFor_me.Models.Admin
+
+@{
+    ViewBag.Title = "Add Admin";
+    Layout = "~/Views/Shared/_LayoutPage1.cshtml";
+}
+
+<h2>Add Admin</h2>
+
+@using (Html.BeginForm("AddAdmin", "Admin", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Username)
+        @Html.TextBoxFor(model => model.Username, new { @class = "form-control" })
+        @Html.ValidationMessageFor(model => model.Username)
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(model => model.Email)
+        @Html.TextBoxFor(model => model.Email, new { @class = "form-control" })
+        @Html.ValidationMessageFor(model => model.Email)
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(model => model.PasswordHash)
+        @Html.PasswordFor(model => model.PasswordHash, new { @class = "form-control" })
+        @Html.ValidationMessageFor(model => model.PasswordHash)
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.img)
+        <input type="file" name="img" class="form-control" />
+        @Html.ValidationMessageFor(model => model.img)
+    </div>
+
+
+
+    <button type="submit" class="btn btn-primary">Add Admin</button>
+}
+

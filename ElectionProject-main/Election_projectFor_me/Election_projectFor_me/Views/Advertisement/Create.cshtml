@@ -1,0 +1,180 @@
+﻿@model Election_projectFor_me.Models.Ad
+
+@{
+    ViewBag.Title = "Create Advertisement";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-5" style="direction: rtl;">
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <div class="card shadow-sm p-4">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h2 class="text-center mb-4">تسجيل طلب للإعلان</h2>
+                        @using (Html.BeginForm())
+                        {
+                            @Html.AntiForgeryToken()
+
+                            <div class="form-horizontal">
+                                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                                <div class="form-group mb-3">
+                                    @Html.Label("الرقم الوطني", htmlAttributes: new { @class = "form-label label-black" })
+                                    <div class="col-md-10">
+                                        @Html.EditorFor(model => model.NationalNumber, new { htmlAttributes = new { @class = "form-control input-grey" } })
+                                        @Html.ValidationMessageFor(model => model.NationalNumber, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <div class="form-group mb-3">
+                                    @Html.Label("عنوان الاعلان", htmlAttributes: new { @class = "form-label label-black" })
+                                    <div class="col-md-10">
+                                        @Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control input-grey" } })
+                                        @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <div class="form-group mb-3">
+                                    @Html.Label("اسم المرشح", htmlAttributes: new { @class = "form-label label-black" })
+                                    <div class="col-md-10">
+                                        @Html.EditorFor(model => model.CandidateName, new { htmlAttributes = new { @class = "form-control input-grey" } })
+                                        @Html.ValidationMessageFor(model => model.CandidateName, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <div class="form-group mb-3">
+                                    @Html.Label("نوع الترشح", htmlAttributes: new { @class = "form-label label-black" })
+                                    <div class="col-md-10">
+                                        <div class="form-check form-check-inline">
+                                            @Html.RadioButtonFor(model => model.Type, "list", new { @class = "form-check-input", id = "listOption" })
+                                            @Html.Label("قائمة محلي", htmlAttributes: new { @class = "form-check-label label-black", @for = "listOption" })
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            @Html.RadioButtonFor(model => model.Type, "party", new { @class = "form-check-input", id = "partyOption" })
+                                            @Html.Label("قائمة حزبية", htmlAttributes: new { @class = "form-check-label label-black", @for = "partyOption" })
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group mb-3" id="listNameDiv" style="display:none;">
+                                    @Html.Label("اسم القائمة", htmlAttributes: new { @class = "form-label label-black" })
+                                    <div class="col-md-10">
+                                        @Html.EditorFor(model => model.ListName, new { htmlAttributes = new { @class = "form-control input-grey" } })
+                                        @Html.ValidationMessageFor(model => model.ListName, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <div class="form-group mb-3">
+                                    @Html.Label("محتوى الاعلان", htmlAttributes: new { @class = "form-label label-black" })
+                                    <div class="col-md-10">
+                                        @Html.TextAreaFor(model => model.Content, new { htmlAttributes = new { @class = "form-control input-grey", rows = 4 } })
+                                        @Html.ValidationMessageFor(model => model.Content, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <div class="form-group mb-3">
+                                    @Html.Label("رابط الاعلان", htmlAttributes: new { @class = "form-label label-black" })
+                                    <div class="col-md-10">
+                                        @Html.EditorFor(model => model.URLPath, new { htmlAttributes = new { @class = "form-control input-grey" } })
+                                        @Html.ValidationMessageFor(model => model.URLPath, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <div class="form-group text-center">
+                                    <button id="btncreate" type="submit" class="btn btn-custom">تسجيل</button>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                    <div class="col-md-6 d-none d-md-block">
+                        <img src="https://ammannet.net/sites/default/files/styles/news_landing/public/2024-01/%D8%A7%D9%86%D8%AA%D8%AE%D8%A7%D8%A8%D8%A7%D8%AA.jpeg?h=ddc1c437&itok=9F3jBBz0" class="img-fluid rounded" alt="Contact Image">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const listOption = document.getElementById('listOption');
+            const partyOption = document.getElementById('partyOption');
+            const listNameDiv = document.getElementById('listNameDiv');
+            const listNameInput = document.getElementById('ListName');
+
+            listOption.addEventListener('change', function () {
+                if (listOption.checked) {
+                    listNameDiv.style.display = 'block';
+                    listNameInput.setAttribute('required', 'required');
+                }
+            });
+
+            partyOption.addEventListener('change', function () {
+                if (partyOption.checked) {
+                    listNameDiv.style.display = 'none';
+                    listNameInput.removeAttribute('required');
+                }
+            });
+        });
+
+
+    </script>
+}
+
+<style>
+    .card {
+        border: none;
+        border-radius: 10px;
+        background-color: #ffffff;
+        overflow: hidden;
+        padding: 30px;
+        box-shadow: 0 0 30px rgba(0, 0, 0, 0.1);
+    }
+
+    .form-label {
+        font-weight: bold;
+        text-transform: uppercase;
+        font-size: 0.9rem;
+        margin-bottom: 5px;
+    }
+
+    .input-grey {
+        background-color: #f5f5f5;
+        border: 1px solid #ddd;
+        height: 45px;
+        border-radius: 5px;
+    }
+
+    .form-control:focus {
+        box-shadow: none;
+        border-color: #FF3B3B;
+    }
+
+    .btn-custom {
+        background-color: #FF3B3B;
+        color: white;
+        width: 125px;
+        border: none;
+        font-size: 20px;
+        font-weight: 500;
+        padding: 10px 20px;
+        transition: all 0.3s ease;
+    }
+
+        .btn-custom:hover {
+            background-color: #FF3B3B;
+            transform: scale(1.05);
+        }
+
+    .text-center {
+        text-align: center;
+    }
+
+    .img-fluid {
+        max-width: 100%;
+        height: 600px;
+    }
+</style>
